@@ -1,7 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
 import { login } from './http/API';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import AppRouter from './component/AppRouter';
+import { BrowserRouter } from 'react-router-dom';
+
 
 
 function App() {
@@ -9,17 +11,15 @@ function App() {
     const [isxods, setIsxod] = useState(null)
 
     function test(){
-        login().then(data=>setIsxod(data))
+        const query = new URLSearchParams(this.props.location.search);
+        console.log(query)
+        //login().then(data=>setIsxod(data))
     }
 
   return (
-    <div className="App">
-        {console.log(isxods.response[0].activity)}
-      <header className="App-header">
-        <button onClick={()=>test()}>fcgvhbjnk</button>
-        <label>{isxods.response[0].activity}</label>
-      </header>
-    </div>
+    <BrowserRouter>
+        <AppRouter />
+    </BrowserRouter>
   );
 }
 
