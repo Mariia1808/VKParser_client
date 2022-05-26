@@ -1,5 +1,5 @@
 .body{
-    background-color: blanchedalmond;
+    background-color: rgb(168 203 238 / 16%);
 }
 .header{
     display: flex;
@@ -11,11 +11,13 @@
 }
 .header_content{
     display: flex;
+    background-color: white;
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 25px;
@@ -23,17 +25,71 @@
     box-shadow: 0.4em 0.4em 5px rgb(122 122 122 / 27%);
 }
 .content{
-    /* background: rgb(133 194 255 / 28%); */
+    background: rgb(255 255 255);
+    width: -moz-fit-content;
+    margin-top: 0px;
+    /* display: flex; */
+    padding: 20px;
     width: fit-content;
     margin: auto;
+    /* border: 1px solid #1976d2; */
     padding-top: 35px;
-    /* border-left: 1px solid #1976d2;
-    border-bottom: 1px solid #1976d2;
-    border-right: 1px solid #1976d2; */
+    box-shadow:1em 1em 16px 8px rgb(122 122 122 / 27%);
+    justify-content: center;
+    align-content: center;
 }
 .menu_but{   
     margin-right: 15px!important;
 }
 .logo{
-    background-image: ('D:\Загрузки\logoza.ru.png');
+    width: 50%;
+}
+.but_log{
+    width: 260px;
+    /* max-width: max-content; */
+    padding: 0px;
+}
+.button{
+    font-weight: bolder!important;
+    border: 2px solid!important;
+    color: #1976d2;
+}
+.war{
+    font-weight: bold;
+}
+.content_wall{
+    display: flex;
+    /* max-width: 50%; */
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.table th {
+    font-size: 14px;
+    text-align: left;
+    padding: 20px 20px 20px 5px;
+    color: #141414;
+    font-weight: bold;
+    white-space: wrap;
+}
+
+.table thead {
+    background: #f3f3f3;
+}
+.table td {
+    padding: 10px 20px 10px 5px;
+    font-size: 14px;
+    font-weight: lighter;
+    border-bottom: 1px solid #f3f3f3;
+}
+.text{
+    width: 100%;
+}
+.div1{
+    display: flex;
 }

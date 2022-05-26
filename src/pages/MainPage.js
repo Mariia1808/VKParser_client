@@ -2,31 +2,49 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from "query-string";
-import { login } from '../http/API';
+import { getUser_short, login } from '../http/API';
+import jwt_decode from "jwt-decode";
+
 
 
 const MainPage = () =>{
-     
-    const [isxods, setIsxod] = useState(null)
-    const location = useLocation()
-    const [token, setToken] = useState('')
-    const [user_id, set_user_id] = useState('')
-    const [email, setEmail] = useState('')
+   
+    const storedToken = localStorage.getItem("token");
+    let decodedData = jwt_decode(storedToken);
 
-    function test(){
-        //login().then(data=>setIsxod(data))
-    }
+    const [isxods, setIsxod] = useState(null)
+    const [user, setUser] = useState(null)
+    const location = useLocation()
+    
+    useEffect(() =>{
+        let code = (queryString.parse(window.location.href)['http://localhost:3000/main?code'])
+        if(code!=undefined){
+           login(code).then(data => setIsxod(data)) 
+        }
+        if(decodedData!=undefined){
+            getUser_short(decodedData.token, decodedData.user_id).then(data => setUser(data))
+        }
+        
+    },[])
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {console.log(token)}
-        {console.log(user_id)}
-        {console.log(email)}
-        <button onClick={()=>test()}>fcgvhbjnk</button>
-        <button><a href='https://oauth.vk.com/authorize?client_id=8143523&revoke=1&redirect_uri=http://localhost:3000/auth&display=page&scope=friends,offline,photos,audio,video,wall,groups,email&response_type=code'>txcyvjhbkjnl</a></button>
-        <label>{location.pathname}</label>
-      </header>
+    <div className="content content_wall">
+        <label>Добро пожаловать, 
+        {(() => {
+                switch (user!=null) {
+                case true:
+                    return <label className='war'> {user.response[0].last_name} {user.response[0].first_name}!</label>
+                default:
+                    return <></>
+                }
+            })()}
+            
+             </label><br/>
+        <label>
+            Сервис предназначен для сбора данных из социальной сети ВКонтакте. Он позволяет собирает полную информацию о необходимой для вас категории,
+            отфильтровать полученные данные, просмотреть статистику своих приложений или рекламных постов и многое другое. Весь функционал сервиса полностью бесплатный!
+        </label><br/>
+        <label>Выберите в меню сверху любой интерисующий вас раздел и начинайте активный сбор данных. </label>
     </div>
   );
 }
