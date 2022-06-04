@@ -90,7 +90,6 @@ const TableInfo = ({user, kolvo}) =>{
                     })()}</td>
                </tr>
            })}
-            <Button className='menu_but button' variant="outlined">Экспортировать</Button>
         </tbody>
     </table>
     </>

@@ -59,7 +59,7 @@
 }
 .content_wall{
     display: flex;
-    /* max-width: 50%; */
+    max-width: 70%;
     flex-direction: column;
     align-content: center;
     justify-content: center;
@@ -92,4 +92,7 @@
 }
 .div1{
     display: flex;
+}
+.css-1rwt2y5-MuiButtonBase-root-MuiButton-root{
+    box-shadow: 0.5em 0.5em 3px 0px rgb(122 122 122 / 27%);
 }
