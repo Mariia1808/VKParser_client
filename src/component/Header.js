@@ -1,8 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import queryString from "query-string";
-import { getSubscriptions, login } from '../http/API';
 import Button from '@mui/material/Button';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 
@@ -28,35 +26,57 @@ const Header = () =>{
            <Button onClick={()=>toNavigate('/main')} className='but_log'><img className='logo' src={Logotip}/></Button>
         </div>
         <div className='header'>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<PersonOutlineOutlinedIcon />}>Пользователи </Button>}>
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<PersonOutlineOutlinedIcon />}>Пользователи </Button>}>
                 <MenuItem onClick={()=>toNavigate('/user/get_followers')}>Подписчики</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/user/get_subscriptions')}>Подписки</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/user/get_info')}>Информация</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/user/search')}>Поиск</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<InsertCommentOutlinedIcon />}>Комментарии </Button>}>
-                <MenuItem>К альбомам</MenuItem>
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<InsertCommentOutlinedIcon />}>Комментарии </Button>}>
+                <MenuItem onClick={()=>toNavigate('/comments/get_info')}>Информация</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/comments/about_photo')}>К фото</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/comments/about_video')}>К видео</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<GroupsOutlinedIcon />}>Группы </Button>}>
-                <MenuItem onClick={()=>toNavigate('/groups/subscriptions')}>Подписчики</MenuItem>
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<GroupsOutlinedIcon />}>Группы </Button>}>
+                <MenuItem onClick={()=>toNavigate('/groups/get_followers')}>Подписки</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/get_subscriptions')}>Подписчики</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/get_info')}>Информация</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/search')}>Поиск</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/get_catalogs')}>Каталоги</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/get_categories')}>Категории</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<InsertPhotoOutlinedIcon />}>Медия </Button>}>
-                
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<InsertPhotoOutlinedIcon />}>Медия </Button>}>
+                <MenuItem onClick={()=>toNavigate('/media/get_info_photo')}>Информация о фото</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/media/search_photo')}>Поиск фото</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/media/get_info_video')}>Информация о видео</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/media/search_video')}>Поиск видео</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/media/get_info_albom_video')}>Информация об альбоме с видео</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<ArticleOutlinedIcon />}>Стена </Button>}>
-                
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<ArticleOutlinedIcon />}>Стена </Button>}>
+                <MenuItem onClick={()=>toNavigate('/wall/get_info')}>Информация</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/wall/search')}>Поиск</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/wall/get_repost')}>Репосты</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/wall/get_likes')}>"Мне нравится"</MenuItem>
+
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<StackedLineChartOutlinedIcon />}>Статистика </Button>}>
-                
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<StackedLineChartOutlinedIcon />}>Статистика </Button>}>
+                <MenuItem onClick={()=>toNavigate('/statistic/get_post')}>Записи на стене</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/statistic/get_group_application')}>Приложения/сообщества</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/statistic/get_link')}>Сокращенной ссылки</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button' variant="outlined" startIcon={<ControlPointDuplicateOutlinedIcon />}>Прочее </Button>}>
-                <MenuItem>Получение id</MenuItem>
-               
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<ControlPointDuplicateOutlinedIcon />}>Прочее </Button>}>
+                <MenuItem onClick={()=>toNavigate('/other/get_country')}>Страны</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_regions')}>Регионы</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_city')}>Города</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_universities')}>Университеты</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_faculties')}>Институты/факультеты</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_identifikator')}>Получение идентификатора</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/other/get_shold_link')}>Сокращенные ссылки</MenuItem>
             </Menu>
         </div>
         <div>
             <Menu menuButton={<IconButton className='menu_but  button' color="primary"><FaceOutlinedIcon  variant="outlined"/></IconButton>}>
-                <MenuItem>История</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/history')}>История</MenuItem>
                 <MenuItem>Выход</MenuItem>
             </Menu>
         </div>

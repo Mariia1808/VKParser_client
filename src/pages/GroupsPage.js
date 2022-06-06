@@ -1,35 +1,33 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import queryString from "query-string";
-import { getSubscriptions, login } from '../http/API';
-import Button from '@mui/material/Button';
-import jwt_decode from "jwt-decode";
-import LoginIcon from '@mui/icons-material/Login';
-import TextField from '@mui/material/TextField';
 import GroupsSubscriptionPage from '../component/groups/Subscription';
+import GroupsFollowersPage from '../component/groups/Followers';
+import GroupsInfoPage from '../component/groups/Info';
+import GroupsSearchPage from '../component/groups/Search';
+import GroupsCatalogsPage from '../component/groups/Catalogs';
+import GroupsCategoriesPage from '../component/groups/Categories';
 
 const GroupsPage = () =>{
-    const storedToken = localStorage.getItem("token");
-    let decodedData = jwt_decode(storedToken);
     const location = useLocation()
-    const test1 = async() =>{
-        console.log(decodedData.token)
-        console.log()
-        console.log(decodedData)
-        const {data} = await getSubscriptions(decodedData.token, decodedData.user_id)
-        //console.log(isxods['access_token'])
-    }
 
-  return (
-    <div className="content content_wall">
-        {/* <button onClick={()=>test1()}>fcgvhbjnk</button> */}
-      
+    return (
+    <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
                 switch (location.pathname) {
-                case '/groups/subscriptions':
+                case '/groups/get_subscriptions':
                     return <GroupsSubscriptionPage/>
+                case '/groups/get_followers':
+                    return <GroupsFollowersPage/>
+                case '/groups/get_info':
+                    return <GroupsInfoPage/>
+                case '/groups/search':
+                    return <GroupsSearchPage/>
+                case '/groups/get_catalogs':
+                    return <GroupsCatalogsPage/>
+                case '/groups/get_categories':
+                    return <GroupsCategoriesPage/>
                 default:
                     return <></>
                 }

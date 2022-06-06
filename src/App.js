@@ -7,7 +7,8 @@ import Header from './component/Header';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
 import {Context} from "./index";
-import {check} from "./http/API";
+import { check } from './http/API_main';
+
 
 
 const App = observer(() => {

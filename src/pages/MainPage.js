@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from "query-string";
-import { getUser_short, login } from '../http/API';
 import jwt_decode from "jwt-decode";
+import { getUser_short } from '../http/API_user';
+import { login } from '../http/API_main';
 
 
 
@@ -28,7 +29,7 @@ const MainPage = () =>{
     },[])
 
   return (
-    <div className="content content_wall">
+    <div className="content content_wall c">
         <label>Добро пожаловать, 
         {(() => {
                 switch (user!=null) {
