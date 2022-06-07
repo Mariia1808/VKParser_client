@@ -115,4 +115,9 @@
 }
 .con{
     margin-bottom: 50px;
+    padding-top: 0px;
+}
+.zag{
+    display: flex;
+    justify-content: center;
 }

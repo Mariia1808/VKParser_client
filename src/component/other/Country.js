@@ -19,9 +19,32 @@ const OtherCountryPage = () =>{
 
 return (
     <div className='content con'>
-        <h3>Страны</h3>
+        <h3 className='zag'>Страны</h3>
         
-        
+        {(() => {
+        switch (country!=null) {
+            case true:
+                return <><label>Найдено <label className='war'>{country.response.count}</label> страны </label>
+                <table className='table'>
+                    <thead>
+                        <th>№</th>
+                        <th>ID Страны</th>
+                        <th>Название</th>
+                    </thead>
+                    <tbody>
+                        {country.response.items.map((data, index)=>{
+                        return <tr>
+                            <td>{index+1}</td>
+                            <td>{data.id}</td>
+                            <td>{data.title}</td>
+                        </tr>
+                        })}
+                    </tbody>
+                </table>
+            </>
+         default: return<></>
+    }
+    })()}
     </div>
   );
 }
