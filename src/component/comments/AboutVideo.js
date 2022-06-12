@@ -10,7 +10,7 @@ const CommentAboutVideoPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Комментарии к видео</h3>
+        <h3 className='h'>Комментарии к видео</h3>
         
         
     </div>

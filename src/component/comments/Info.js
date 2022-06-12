@@ -10,7 +10,7 @@ const CommentInfoPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Информация о комментарии</h3>
+        <h3 className='h'>Информация о комментарии</h3>
         
         
     </div>

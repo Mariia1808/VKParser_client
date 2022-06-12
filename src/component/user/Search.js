@@ -22,7 +22,7 @@ const UserSearchPage = () =>{
 
   return (
     <div>
-        <h3>Расширенный поиск по пользователям</h3>
+        <h3 className='h'>Расширенный поиск по пользователям</h3>
         {/* <button onClick={()=>test1()}>fcgvhbjnk</button> */}
         <TextField id="filled-basic" label="Filled" variant="filled" />
         {console.log(location.pathname)}

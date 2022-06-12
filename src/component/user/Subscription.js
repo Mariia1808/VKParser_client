@@ -65,17 +65,16 @@ const UserSubscriptionPage = () =>{
 return (
 <>
     <div className='content con'>
-        <h3>Подписки пользователя</h3>
+        <h3 className='h'>Подписки пользователя</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" variant="standard" />
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" variant="standard" />
+            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
             <div className='div1'>
-                <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} isMulti closeMenuOnSelect={false} />
-                <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-                    <SendIcon/>
+                <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+                Продолжить  
                 </Button>
             </div>
-        </div><br/>
+        </div>
     </div>
     {(() => {
     switch (error!=null) {
@@ -87,7 +86,7 @@ return (
         {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content'>
+                return <div className='content con w'>
                 <div className='shapka'>
                     <div>
                         <label>Найденное количество подписок: </label><label className='war'>{info.response.count}</label>

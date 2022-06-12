@@ -29,12 +29,12 @@ const MediaInfoPhotoPage = () =>{
   return (
 <>
     <div className='content con'>
-        <h3>Информация о фото</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" variant="standard" />
+        <h3 className='h'>Информация о фото</h3>
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую идентификаторы фотографий" />
         <div className='div1'>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую короткое имена" variant="standard" />
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-                <SendIcon/>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
             </Button>
         </div>
     </div>
@@ -44,7 +44,7 @@ const MediaInfoPhotoPage = () =>{
             return <div className='content con'>
                 <div className='shapka'>
                     <div>
-                        <label>Получено <label className='war'>{photo.response.length}</label> идентификатора </label>
+                        <label>Получено фотографий <label className='war'>{photo.response.length}</label>  </label>
                     </div>
                     <div>
                         <CsvLink data={photo.response} fileName={NameZapros} >

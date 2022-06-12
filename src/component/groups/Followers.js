@@ -10,7 +10,7 @@ const GroupsFollowersPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Информация о сообществах на которые подписан пользователь</h3>
+        <h3 className='h'>Информация о сообществах на которые подписан пользователь</h3>
         
         
     </div>

@@ -10,7 +10,7 @@ const GroupsSearchPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Поиск сообщества</h3>
+        <h3 className='h'>Поиск сообщества</h3>
         
         
     </div>

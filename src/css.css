@@ -94,16 +94,15 @@
 }
 .div1{
     display: flex;
-    align-items: flex-end;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    margin-top: 10px;
+    justify-content: center;
 }
 .css-but{
     box-shadow: 0.5em 0.5em 3px 0px rgb(122 122 122 / 27%);
 }
 .select{
     width: -webkit-fill-available;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .shapka{
     display: flex;
@@ -120,4 +119,41 @@
 .zag{
     display: flex;
     justify-content: center;
+}
+.w{
+    max-width: min-content;
+}
+.h{
+    margin-bottom: 0px;
+    justify-content: center;
+    display: flex;
+}
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+    margin-top: 10px!important;
+}
+.css-1s2u09g-control{
+    height: 56px;
+}
+.dia{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+.diaT{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.b{
+    margin-top: 0;
+    margin-left: 70px;
+}
+.stat{
+    display: flex;
 }

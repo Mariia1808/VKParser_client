@@ -38,7 +38,6 @@ const Header = () =>{
                 <MenuItem onClick={()=>toNavigate('/comments/about_video')}>К видео</MenuItem>
             </Menu>
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<GroupsOutlinedIcon />}>Группы </Button>}>
-                <MenuItem onClick={()=>toNavigate('/groups/get_followers')}>Подписки</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_subscriptions')}>Подписчики</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_info')}>Информация</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/search')}>Поиск</MenuItem>
@@ -56,12 +55,10 @@ const Header = () =>{
                 <MenuItem onClick={()=>toNavigate('/wall/get_info')}>Информация</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/wall/search')}>Поиск</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/wall/get_repost')}>Репосты</MenuItem>
-                <MenuItem onClick={()=>toNavigate('/wall/get_likes')}>"Мне нравится"</MenuItem>
-
             </Menu>
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<StackedLineChartOutlinedIcon />}>Статистика </Button>}>
-                <MenuItem onClick={()=>toNavigate('/statistic/get_post')}>Записи на стене</MenuItem>
-                <MenuItem onClick={()=>toNavigate('/statistic/get_group_application')}>Приложения/сообщества</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/statistic/get_application')}>Приложения</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/statistic/get_group')}>Cообщества</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/statistic/get_link')}>Сокращенной ссылки</MenuItem>
             </Menu>
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<ControlPointDuplicateOutlinedIcon />}>Прочее </Button>}>

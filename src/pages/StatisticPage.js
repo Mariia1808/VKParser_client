@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import StatisticGroupApplicationPage from '../component/statistic/GroupApplication';
+import StatisticApplicationPage from '../component/statistic/Application';
+import StatisticGroupPage from '../component/statistic/Group';
 import StatisticLinkPage from '../component/statistic/Link';
 import StatisticPostPage from '../component/statistic/Post';
 
@@ -19,8 +20,10 @@ const StatisticPage = () =>{
                 switch (location.pathname) {
                 case '/statistic/get_post':
                     return <StatisticPostPage/>
-                case '/statistic/get_group_application':
-                    return <StatisticGroupApplicationPage/>
+                case '/statistic/get_application':
+                    return <StatisticApplicationPage/>
+                case '/statistic/get_group':
+                    return <StatisticGroupPage/>
                 case '/statistic/get_link':
                     return <StatisticLinkPage/>
                 default:

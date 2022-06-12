@@ -10,7 +10,7 @@ const StatisticLinkPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Статистика сокращенной ссылки</h3>
+        <h3 className='h'>Статистика сокращенной ссылки</h3>
         
         
     </div>

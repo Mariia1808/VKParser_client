@@ -1,5 +1,5 @@
 import './css.css';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {observer} from "mobx-react-lite";
 import AppRouter from './component/AppRouter';
 import { BrowserRouter } from 'react-router-dom';

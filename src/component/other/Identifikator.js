@@ -28,12 +28,12 @@ const OtherIdentifikatorPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3>Получение идентификатора из короткого имени</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" variant="standard" />
+        <h3 className='h'>Получение идентификатора из короткого имени</h3>
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую короткое имена" />
         <div className='div1'>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую короткое имена" variant="standard" />
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-                <SendIcon/>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
             </Button>
         </div>
     </div>

@@ -1,1 +1,23 @@
 import axios from "axios";
+
+export const getById = async (token, group_id, fields) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/get_info/'+token+'/'+group_id+'/'+fields)
+    console.log(data)
+    return data
+}
+
+export const getMembers = async (token, group_id, fields, filter) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/get_members/'+token+'/'+group_id+'/'+fields+'/'+filter )
+    console.log(data)
+    return data
+}
+export const getCatalogInfo = async (token) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/get_catalog_info/'+token)
+    console.log(data)
+    return data
+}
+export const getCatalog = async (token, category_id, subcategory_id) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/get_catalog/'+token+'/'+category_id+'/'+subcategory_id)
+    console.log(data)
+    return data
+}

@@ -49,19 +49,19 @@ const OtherCityPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3 className='zag'>Города</h3>
+        <h3 className='h zag'>Города</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedCountry} onChange={setSelectedCountry} onMenuClose={()=>get_region()} options={countries} closeMenuOnSelect={false} />
+        <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} options={regions} closeMenuOnSelect={false} />
         <div className='div1'>
-        <Select className='select' placeholder='Выберите страну' defaultValue={selectedRegion} onChange={setSelectedRegion} options={regions} closeMenuOnSelect={false} />
-        <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-            <SendIcon/>
-        </Button>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
+            </Button>
         </div>
     </div>
     {(() => {
         switch (city!=null) {
         case true:
-            return <div className='content con'>
+            return <div className='content con w'>
                 <label>Найдено <label className='war'>{city.length}</label> региона </label>
             <table className='table'>
                 <thead>

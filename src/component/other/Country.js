@@ -19,7 +19,7 @@ const OtherCountryPage = () =>{
 
 return (
     <div className='content con'>
-        <h3 className='zag'>Страны</h3>
+        <h3 className='h'>Страны</h3>
         
         {(() => {
         switch (country!=null) {

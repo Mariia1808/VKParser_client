@@ -10,7 +10,7 @@ const StatisticPostPage = () =>{
 
   return (
     <div className='content con'>
-        <h3>Статистика записи</h3>
+        <h3 className='h'>Статистика записи</h3>
         
         
     </div>

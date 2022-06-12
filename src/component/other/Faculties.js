@@ -85,22 +85,22 @@ const OtherFacultiesPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3 className='zag'>Институт/факультет</h3>
+        <h3 className='h'>Институт/факультет</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedCountry} onChange={setSelectedCountry} onMenuClose={(e)=>get_region()} options={countries} closeMenuOnSelect={false} />
         {console.log(regions)}
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={(e)=>get_city()} options={regions} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} onMenuClose={(e)=>get_universities()} options={cities} closeMenuOnSelect={false} />
+        <Select className='select' placeholder='Выберите университет' defaultValue={selectedUnivercity} onChange={setSelectedUnivercity} options={universities} closeMenuOnSelect={false} />
         <div className='div1'>
-        <Select className='select' placeholder='Выберите город' defaultValue={selectedUnivercity} onChange={setSelectedUnivercity} options={universities} closeMenuOnSelect={false} />
-        <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-            <SendIcon/>
-        </Button>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
+            </Button>
         </div>
     </div>
     {(() => {
             switch (facults!=null) {
             case true:
-                return <div className='content con'>
+                return <div className='content con w'>
                     <label>Найдено <label className='war'>{facults.response.count}</label> институтов/факультетов </label>
                 <table className='table'>
                     <thead>

@@ -4,17 +4,17 @@ import jwt_decode from "jwt-decode";
 import TextField from '@mui/material/TextField';
 
 
-const StatisticGroupApplicationPage = () =>{
+const StatisticApplicationPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
   return (
     <div className='content con'>
-        <h3>Статистика группы/приложения</h3>
+        <h3 className='h'>Статистика приложения</h3>
         
         
     </div>
   );
 }
 
-export default StatisticGroupApplicationPage;
+export default StatisticApplicationPage;

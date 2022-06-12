@@ -67,20 +67,20 @@ const OtherUniversitiesPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3 className='zag'>Университеты</h3>
+        <h3 className='h'>Университеты</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedCountry} onChange={setSelectedCountry} onMenuClose={()=>get_region()} options={countries} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={()=>get_city()} options={regions} closeMenuOnSelect={false} />
-        <div className='div1'>
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} options={cities} closeMenuOnSelect={false} />
-        <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-            <SendIcon/>
-        </Button>
+        <div className='div1'>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
+            </Button>
         </div>
     </div>
         {(() => {
             switch (universite!=null) {
             case true:
-                return <div className='content con'>
+                return <div className='content con w'>
                     <label>Найдено <label className='war'>{universite.response.count}</label> университетов </label>
                 <table className='table'>
                     <thead>

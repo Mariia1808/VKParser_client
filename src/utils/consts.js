@@ -36,7 +36,8 @@ export const WALL_GET_LIKES = '/wall/get_likes'
 
 //статистика
 export const STATISTIC_POST = '/statistic/get_post'
-export const STATISTIC_GROUP_APPLICATION = '/statistic/get_group_application'
+export const STATISTIC_GROUP = '/statistic/get_group'
+export const STATISTIC_APPLICATION = '/statistic/get_application'
 export const STATISTIC_GET_LINK = '/statistic/get_link'
 
 //прочее

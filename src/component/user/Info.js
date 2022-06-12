@@ -29,8 +29,11 @@ const UserInfoPage = () =>{
 
     const [selectedOption, setSelectedOption] = useState(null)
 
-    let data = [{value: '',label:'Основные'},
-    {value: '',label:'Дополнительные'}]
+    let data = [{value: 'activities,about,blacklisted,blacklisted_by_me,books,bdate,can_be_invited_group,can_post,can_see_all_posts,can_see_audio',label:'Основные'},
+    {value: 'can_send_friend_request,can_write_private_message,career,common_count,connections,contacts,city,country,crop_photo,domain,education,exports',label:'Дополнительные'},
+    {value: 'followers_count,friend_status,has_photo,has_mobile,home_town,photo_100,sex,site,schools,screen_name,status,verified,games,interests,is_favorite',label:'Дополнительные1'},
+    {value: 'is_friend,is_hidden_from_feed,last_seen,maiden_name,military,movies,music,nickname,occupation,online,personal,photo_id,photo_max,photo_max_orig',label:'Дополнительные2'},
+    {value: 'quotes,relation,relatives,timezone,tv,universities',label:'Дополнительные3'}]
 
     const [name, setName] = useState(null)
     const [NameZapros, setNameZapros] = useState(null)
@@ -66,17 +69,18 @@ const UserInfoPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3>Расширенная информация о пользователе(-ях)</h3>
+        <h3 className='h'>Расширенная информация о пользователе(-ях)</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" variant="standard" />
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" variant="standard" />
-            <div className='div1'>
-                <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} isMulti closeMenuOnSelect={false} />
-                <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-                    <SendIcon/>
-                </Button>
-            </div>
-        </div><br/>
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+           
+        <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} isMulti closeMenuOnSelect={false} />
+        <div className='div1'>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
+            </Button>
+        </div>
+        </div>
     </div>
     {(() => {
     switch (error!=null) {
@@ -88,7 +92,7 @@ const UserInfoPage = () =>{
         {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content'>
+                return <div className='content con w'>
                 <div className='shapka'>
                     <div>
                         <label>Число пользователей: </label><label className='war'>{info.response.length}</label>
@@ -129,7 +133,7 @@ const UserInfoPage = () =>{
                         <td>{(() => {
                                 switch (data.sex) {
                                 case 1: return <>Женский</>
-                                case 0: return <>Мужской</>
+                                case 2: return <>Мужской</>
                                 default: return <>-</>
                                 }
                             })()}</td>

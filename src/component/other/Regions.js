@@ -36,13 +36,13 @@ const OtherRegionsPage = () =>{
     
 
   return (
-    <><div className='content con'>
-        <h3 className='zag'>Регионы</h3>
-        <div className='div1'>
+    <><div className='content w'>
+        <h3 className='h'>Регионы</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
-        <Button className='menu_but button' variant="outlined" onClick={()=>Send()}>
-            <SendIcon/>
-        </Button>
+        <div className='div1'>
+            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
+            Продолжить  
+            </Button>
         </div>
         
     </div>
@@ -50,7 +50,7 @@ const OtherRegionsPage = () =>{
         {(() => {
             switch (region!=null) {
             case true:
-                return <div className='content con'>
+                return <div className='content con w'>
                     <label>Найдено <label className='war'>{region.response.count}</label> региона </label>
                 <table className='table'>
                     <thead>
