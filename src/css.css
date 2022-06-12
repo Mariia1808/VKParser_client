@@ -157,3 +157,6 @@
 .stat{
     display: flex;
 }
+.p{
+    max-width: 70%;
+}

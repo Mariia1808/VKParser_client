@@ -1,3 +1,4 @@
+import { getCardUtilityClass } from "@mui/material";
 import axios from "axios";
 
 export const resolveScreenName = async (token, user_id) => {
@@ -32,6 +33,16 @@ export const getFaculties = async (token, university_id) => {
 }
 export const getLastShortenedLink = async (token) => {
     const {data} = await axios.post('http://localhost:5000/api/other/short_link/'+token)
+    console.log(data)
+    return data
+}
+export const getCitiesById = async (token, city) => {
+    const {data} = await axios.post('http://localhost:5000/api/other/getCitiesById/'+token+'/'+city)
+    console.log(data)
+    return data
+}
+export const getCountriesById = async (token, country) => {
+    const {data} = await axios.post('http://localhost:5000/api/other/getCountriesById/'+token+'/'+country)
     console.log(data)
     return data
 }

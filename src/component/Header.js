@@ -33,18 +33,19 @@ const Header = () =>{
                 <MenuItem onClick={()=>toNavigate('/user/search')}>Поиск</MenuItem>
             </Menu>
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<InsertCommentOutlinedIcon />}>Комментарии </Button>}>
-                <MenuItem onClick={()=>toNavigate('/comments/get_info')}>Информация</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/comments/about_post')}>К записи</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/comments/about_photo')}>К фото</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/comments/about_video')}>К видео</MenuItem>
             </Menu>
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<GroupsOutlinedIcon />}>Группы </Button>}>
                 <MenuItem onClick={()=>toNavigate('/groups/get_subscriptions')}>Подписчики</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_info')}>Информация</MenuItem>
-                <MenuItem onClick={()=>toNavigate('/groups/search')}>Поиск</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/search')}>Поиск сообществ</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/search_event')}>Поиск событий</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_catalogs')}>Каталоги</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_categories')}>Категории</MenuItem>
             </Menu>
-            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<InsertPhotoOutlinedIcon />}>Медия </Button>}>
+            <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<InsertPhotoOutlinedIcon />}>Медиа </Button>}>
                 <MenuItem onClick={()=>toNavigate('/media/get_info_photo')}>Информация о фото</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/media/search_photo')}>Поиск фото</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/media/get_info_video')}>Информация о видео</MenuItem>

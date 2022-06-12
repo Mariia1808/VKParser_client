@@ -62,7 +62,7 @@ const OtherCityPage = () =>{
         switch (city!=null) {
         case true:
             return <div className='content con w'>
-                <label>Найдено <label className='war'>{city.length}</label> региона </label>
+                <label>Найдено <label className='war'>{city.length}</label> города </label>
             <table className='table'>
                 <thead>
                     <th>№</th>

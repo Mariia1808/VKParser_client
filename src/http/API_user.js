@@ -25,3 +25,24 @@ export const getUser_followers = async (token, user_id, fields) => {
     console.log(data)
     return data
 }
+
+export const searchUserSchool = async (token, q, sort, fields, sex, age_from, age_to, group_id, from_list, school, school_year) => {
+    const {data} = await axios.post('http://localhost:5000/api/user/searchUserSchool/')
+    console.log(data)
+    return data
+}
+export const searchUserUniversity = async (token, q, sort, fields, sex, age_from, age_to, group_id, from_list, university, university_year, university_faculty, university_chair) => {
+    const {data} = await axios.post('http://localhost:5000/api/user/searchUserUniversity/')
+    console.log(data)
+    return data
+}
+export const searchUserWork = async (token, q, sort, fields, city, sex, age_from, age_to, group_id, from_list, company, position) => {
+    const {data} = await axios.post('http://localhost:5000/api/user/searchUserWork/')
+    console.log(data)
+    return data
+}
+export const searchUserAll = async (token, q, sort, fields, city, sex, status, age_from, age_to, birth_day, birth_month, birth_year, group_id, from_list) => {
+    const {data} = await axios.post('http://localhost:5000/api/user/searchUserAll/')
+    console.log(data)
+    return data
+}

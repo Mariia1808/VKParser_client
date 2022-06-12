@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import WallInfoPage from '../component/wall/Info';
 import WallSearchPage from '../component/wall/Search';
 import WallRepostPage from '../component/wall/Repost';
-import WallLikesPage from '../component/wall/Likes';
 
 
 const WallPage = () =>{
@@ -23,8 +22,6 @@ const WallPage = () =>{
                     return <WallSearchPage/>
                 case '/wall/get_repost':
                     return <WallRepostPage/>
-                case '/wall/get_likes':
-                    return <WallLikesPage/>
                 default:
                     return <></>
                 }

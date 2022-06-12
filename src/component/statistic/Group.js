@@ -48,15 +48,6 @@ const StatisticGroupPage = () =>{
         const data = await statsGroupAll(decodedData.token, selectedOption.value)
         setInfo(data)
     }
-    
-    const [timestamp_from, setTimestamp_from] = useState(null)
-    const [timestamp_to, setTimestamp_to] = useState(null)
-    const [info1, setInfo1] = useState(null)
-    const Send1 = async () =>{
-        console.log(selectedOption)
-        const data = await statsGroup(decodedData.token, selectedOption.value, new Date(timestamp_from).valueOf()/1000, new Date(timestamp_to).valueOf()/1000)
-        setInfo1(data)
-    }
 
   return (
 <>

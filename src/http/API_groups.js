@@ -21,3 +21,13 @@ export const getCatalog = async (token, category_id, subcategory_id) => {
     console.log(data)
     return data
 }
+export const searchGroup = async (token, q, type, sort) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/searchGroup/'+token+'/'+q+'/'+type+'/'+sort)
+    console.log(data)
+    return data
+}
+export const searchEvent = async (token, q, city_id, sort) => {
+    const {data} = await axios.post('http://localhost:5000/api/group/searchEvent/'+token+'/'+q+'/'+city_id+'/'+sort)
+    console.log(data)
+    return data
+}

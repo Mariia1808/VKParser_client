@@ -5,10 +5,9 @@ export const getInfoPhoto = async (token, photos) => {
     console.log(data)
     return data
 }
-export const getInfoVideo = async (token, owner_id, videos, album_id) => {
-    videos = videos===''?null:videos
-    videos = album_id===''?null:album_id
-    const {data} = await axios.post('http://localhost:5000/api/media/getInfoVideo/'+token+'/'+owner_id+'/'+videos+'/'+album_id)
+export const getInfoVideo = async (token, owner_id, album_id) => {
+    album_id = album_id===''?null:album_id
+    const {data} = await axios.post('http://localhost:5000/api/media/getInfoVideo/'+token+'/'+owner_id+'/'+album_id)
     console.log(data)
     return data
 }

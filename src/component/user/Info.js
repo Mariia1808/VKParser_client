@@ -127,7 +127,7 @@ const UserInfoPage = () =>{
                     return <tr>
                         <td>{index+1}</td>
                         <td>{data.id}</td>
-                        <td><>{data.screen_name}</></td>
+                        <td>{data.screen_name}</td>
                         <td>{data.first_name}</td>
                         <td>{data.last_name}</td>
                         <td>{(() => {

@@ -3,16 +3,16 @@ import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
 import TextField from '@mui/material/TextField';
 import { resolveScreenName } from '../../http/API_other';
-import { getCommentsVideo } from '../../http/API_comments';
+import { getCommentsWall } from '../../http/API_comments';
 import SendIcon from '@mui/icons-material/Send';
 
-const CommentAboutVideoPage = () =>{
+const CommentAboutPostPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
     
     const [name, setName] = useState(null)
-    const [video_id, setVideo] = useState(null)
+    const [post_id, setPost] = useState(null)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
     const [main, setMain] = useState(null)
@@ -26,16 +26,16 @@ const CommentAboutVideoPage = () =>{
         }else if(id[0].type==='user'){
             ids = id[0].object_id
         }
-        const data = await getCommentsVideo(decodedData.token, ids, video_id)
+        const data = await getCommentsWall(decodedData.token, ids, post_id)
         setInfo(data)
     }
 
   return (
 <>
     <div className='content con'>
-        <h3 className='h'>Комментарии к видео</h3>
+        <h3 className='h'>Комментарии к записи</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
-        <TextField className='text' id="filled-basic" onChange={e=>setVideo(e.target.value)} label="Введите идентификатор видеозаписи" />
+        <TextField className='text' id="filled-basic" onChange={e=>setPost(e.target.value)} label="Введите идентификатор записи" />
         <div className='div1'>
             <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
             Продолжить  
@@ -51,7 +51,7 @@ const CommentAboutVideoPage = () =>{
             <div className='content con p'>
                 <div className='shapka'>
                     <div>
-                        <label>Получено комментариев <label className='war'>{info.response.count}</label></label>
+                        <label>Получено комментариев <label className='war'>{info.response.items.length}</label></label>
                     </div>
                 </div>
             <div>
@@ -63,8 +63,6 @@ const CommentAboutVideoPage = () =>{
                     <th>Текст</th>
                     <th>Лайки</th>
                     <th>Вложения</th>
-                    <th>В ответ на комментарий</th>
-                    <th>В ответ пользователю</th>
                 </thead>
                 <tbody>
                     {info.response.items.map((data, index)=>{
@@ -93,22 +91,6 @@ const CommentAboutVideoPage = () =>{
                                     }
                                 })()}
                             </td>
-                            <td>
-                                {(() => {
-                                    switch (data.reply_to_comment!=undefined) {
-                                    case true: return <>{data.reply_to_comment}</>
-                                    default: return <>-</>
-                                    }
-                                })()}
-                            </td>
-                            <td>
-                                {(() => {
-                                    switch (data.reply_to_user!=undefined) {
-                                    case true: return <>{data.reply_to_user}</>
-                                    default: return <>-</>
-                                    }
-                                })()}
-                            </td>
                         </tr>
                     })}
                 </tbody>
@@ -123,4 +105,4 @@ const CommentAboutVideoPage = () =>{
   );
 }
 
-export default CommentAboutVideoPage;
+export default CommentAboutPostPage;

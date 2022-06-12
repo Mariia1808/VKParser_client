@@ -7,6 +7,7 @@ import GroupsInfoPage from '../component/groups/Info';
 import GroupsSearchPage from '../component/groups/Search';
 import GroupsCatalogsPage from '../component/groups/Catalogs';
 import GroupsCategoriesPage from '../component/groups/Categories';
+import EventSearchPage from '../component/groups/SearchEvent';
 
 const GroupsPage = () =>{
     const location = useLocation()
@@ -24,6 +25,8 @@ const GroupsPage = () =>{
                     return <GroupsInfoPage/>
                 case '/groups/search':
                     return <GroupsSearchPage/>
+                case '/groups/search_event':
+                    return <EventSearchPage/>
                 case '/groups/get_catalogs':
                     return <GroupsCatalogsPage/>
                 case '/groups/get_categories':

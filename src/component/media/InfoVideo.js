@@ -40,7 +40,7 @@ const MediaInfoVideoPage = () =>{
             ids = null
         }
         console.log(ids)
-        getInfoVideo(decodedData.token, ids, Video, Albom).then(data=>setInfo(data))
+        getInfoVideo(decodedData.token, ids, Albom).then(data=>setInfo(data))
     }
 
     const Save =()=>{
@@ -62,7 +62,7 @@ const MediaInfoVideoPage = () =>{
         <h3 className='h'>Информация о видео</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
         <TextField className='text' id="filled-basic" onChange={e=>setID(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
-        <TextField className='text' id="filled-basic" onChange={e=>setVideo(e.target.value)} label="Введите идентификаторы видеозаписей" />
+        {/* <TextField className='text' id="filled-basic" onChange={e=>setVideo(e.target.value)} label="Введите идентификаторы видеозаписей" /> */}
             <TextField className='text' id="filled-basic" onChange={e=>setAlbom(e.target.value)} label="Введите идентификатор альбома" />
             <div className='div1'>
             <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>

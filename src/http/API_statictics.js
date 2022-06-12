@@ -16,13 +16,8 @@ export const statsAppAll = async (token, app_id) => {
     console.log(data)
     return data
 }
-export const statsGroup = async (token, group_id, timestamp_from, timestamp_to) => {
-    const {data} = await axios.post('http://localhost:5000/api/static/statsGroup/'+token+'/'+group_id+'/'+timestamp_from+'/'+timestamp_to)
-    console.log(data)
-    return data
-}
-export const statsApp = async (token, app_id, timestamp_from, timestamp_to) => {
-    const {data} = await axios.post('http://localhost:5000/api/static/statsApp/'+token+'/'+app_id+'/'+timestamp_from+'/'+timestamp_to)
+export const getLinkStats = async (token, key) => {
+    const {data} = await axios.post('http://localhost:5000/api/static/getLinkStats/'+token+'/'+key)
     console.log(data)
     return data
 }

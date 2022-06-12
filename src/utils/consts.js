@@ -9,7 +9,7 @@ export const USER_GET_SUBSCRIPTIONS = '/user/get_subscriptions'
 export const USER_SEARCH = '/user/search'
 
 //комментарии
-export const COMMENTS_GET_INFO = '/comments/get_info'
+export const COMMENTS_ABOUT_POST = '/comments/about_post'
 export const COMMENTS_ABOUT_PHOTO = '/comments/about_photo'
 export const COMMENTS_ABOUT_VIDEO = '/comments/about_video'
 
@@ -18,6 +18,7 @@ export const GROUPS_GET_SUBSCRIPTIONS = '/groups/get_subscriptions'
 export const GROUPS_GET_FOLLOWERS = '/groups/get_followers'
 export const GROUPS_GET_INFO = '/groups/get_info'
 export const GROUPS_SEARCH = '/groups/search'
+export const GROUPS_SEARCH_EVENT = '/groups/search_event'
 export const GROUPS_GET_CATALOGS = '/groups/get_catalogs'
 export const GROUPS_GET_CATEGORIES = '/groups/get_categories'
 
