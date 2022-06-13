@@ -13,6 +13,7 @@ import { SaveHistory } from '../../http/API_main';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Select from 'react-select';
 import {VictoryPie} from 'victory'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const StatisticLinkPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -41,9 +42,13 @@ const StatisticLinkPage = () =>{
     const [info, setInfo] = useState(null)
     const [country, setCountry] = useState(null)
     const [city, setCity] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = async () =>{
+        setLoading(true)
         console.log(selectedOption)
-        const data = await getLinkStats(decodedData.token, selectedOption.value)
+        let SelectedOption = (selectedOption===null? null:selectedOption.value)
+
+        const data = await getLinkStats(decodedData.token, SelectedOption).finally(()=>setLoading(false))
         setInfo(data)
         let countries = ``
         let cities = ``
@@ -68,15 +73,17 @@ const StatisticLinkPage = () =>{
         <h3 className='h'>Статистика сокращенной ссылки</h3>
         <Select className='select' placeholder='Выберите ссылку' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
         {(() => {
         switch ((info!==null)&&(country!==null)&&(city!==null)) {
         case true:
-            return <div className='content con'>{info.response.stats.length!==0?
+            return <>{info.response===undefined?
+                <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    :<><div className='content con'>{info.response.stats.length!==0?
                 <>
                 <label>Общее число переходов: <label className='war'>{info.response.stats[0].views}</label></label>
                 <table className='table'>
@@ -134,7 +141,7 @@ const StatisticLinkPage = () =>{
                 </table>
                 </>
                 :<>Данные о статистике отсутсвуют</>}
-            </div>
+            </div></>}</>
         default: return<></>
         }
         })()}

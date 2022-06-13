@@ -11,6 +11,11 @@ import CsvLink from 'react-csv-export';
 import { SaveHistory } from '../../http/API_main';
 import { getAlbumById } from '../../http/API_media';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 const MediaInfoAlbomVideoPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -20,15 +25,32 @@ const MediaInfoAlbomVideoPage = () =>{
     const [ID, setID] = useState(null)
     const [info, setInfo] = useState(null)
 
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = async () =>{
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
         let ids = ``
         const id = await resolveScreenName(decodedData.token, ID)
-        console.log(ids)
-        getAlbumById(decodedData.token, id[0].object_id, Albom).then(data=>setInfo(data))
+
+        if(id!==''){
+            ids=id[0].object_id
+        }else{
+            ids=null
+        }
+        let albom = (Albom===''? null:Albom)
+        getAlbumById(decodedData.token, ids, albom).then(data=>setInfo(data)).finally(()=>setLoading(false))
+        }else{
+            setOpen_error(true)
+        }
     }
 
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
     const Delete = () =>{
@@ -39,18 +61,27 @@ const MediaInfoAlbomVideoPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Информация об альбоме с видео</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
             <TextField className='text' id="filled-basic" onChange={e=>setID(e.target.value)} label="Введите короткое имя пользователя или сообщаства" />
             <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
     switch (info!=null) {
         case true:
-            return <div className='content w'>
+            return <>{info.response===undefined?
+                <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    :<><div className='content w'>
             <div className='shapka'>
                 <div>
                     <label>Найденно альбомов: </label><label className='war'>{info.response.count}</label>
@@ -62,9 +93,16 @@ const MediaInfoAlbomVideoPage = () =>{
                         </IconButton>
                     </CsvLink>
                     <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                    <IconButton color="primary" variant="outlined" onClick={()=>Delete()}><DeleteForeverIcon/></IconButton>
+                    
                 </div>
             </div>
+            <Collapse in={open}>
+                <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>}sx={{ mb: 2 }}>
+                        Запрос успешно сохранен
+                </Alert>
+            </Collapse>
             <table className='table'>
             <thead>
                 <th>№</th>
@@ -86,6 +124,7 @@ const MediaInfoAlbomVideoPage = () =>{
                 </tbody>
             </table>
         </div>
+        </>}</>
         default:
             return <></>
         }

@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { resolveScreenName } from '../../http/API_other';
 import { getCommentsPhotos } from '../../http/API_comments';
 import SendIcon from '@mui/icons-material/Send';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const CommentAboutPhotoPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -16,16 +17,23 @@ const CommentAboutPhotoPage = () =>{
     const [copyes, setCopy] = useState(null)
     const [main, setMain] = useState(null)
 
+    const [loading, setLoading]=useState(false)
     const Send = async () =>{
+        setLoading(true)
         setInfo(null)
         let ids=``
         const id = await resolveScreenName(decodedData.token, name)
-        if(id[0].type==='group'){
-            ids = `-`+ id[0].object_id
-        }else if(id[0].type==='user'){
-            ids = id[0].object_id
+        if(id!==''){
+            if(id[0].type==='group'){
+                ids = `-`+ id[0].object_id
+            }else if(id[0].type==='user'){
+                ids = id[0].object_id
+            }
+        }else{
+            ids=null
         }
-        const data = await getCommentsPhotos(decodedData.token, ids, photo_id)
+        let Photo_id = (photo_id===''? null:photo_id)
+        const data = await getCommentsPhotos(decodedData.token, ids, Photo_id).finally(()=>setLoading(false))
         setInfo(data)
     }
 
@@ -36,9 +44,9 @@ const CommentAboutPhotoPage = () =>{
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         <TextField className='text' id="filled-basic" onChange={e=>setPhoto(e.target.value)} label="Введите идентификатор фотографии" />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {

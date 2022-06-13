@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { getFaculties, getCountries, getCities, getRegions, getUniversities } from '../../http/API_other';
 import Select from 'react-select';
 import SendIcon from '@mui/icons-material/Send';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const OtherFacultiesPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -73,8 +74,11 @@ const OtherFacultiesPage = () =>{
         console.log(universities)
     }
     const [facults, setFacults] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
-        getFaculties(decodedData.token, selectedUnivercity.value).then(data => setFacults(data))
+        setLoading(true)
+        let SelectedUnivercity = (selectedUnivercity===null? null:selectedUnivercity.value)
+        getFaculties(decodedData.token, SelectedUnivercity).then(data => setFacults(data)).finally(()=>setLoading(false))
     }
 
     const [selectedCountry, setSelectedCountry] = useState(null)
@@ -91,15 +95,17 @@ const OtherFacultiesPage = () =>{
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} onMenuClose={(e)=>get_universities()} options={cities} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите университет' defaultValue={selectedUnivercity} onChange={setSelectedUnivercity} options={universities} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
             switch (facults!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{facults.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                     <label>Найдено <label className='war'>{facults.response.count}</label> институтов/факультетов </label>
                 <table className='table'>
                     <thead>
@@ -118,6 +124,7 @@ const OtherFacultiesPage = () =>{
                     </tbody>
                 </table>
                 </div>
+                </>}</>
             default: return<></>
         }
         })()}

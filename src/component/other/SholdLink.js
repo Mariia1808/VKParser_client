@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
 import TextField from '@mui/material/TextField';
 import { getLastShortenedLink } from '../../http/API_other';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const OtherSholdLinkPage = () =>{
     const [link, setLink] = useState(null)
@@ -19,7 +19,9 @@ const OtherSholdLinkPage = () =>{
         {(() => {
         switch (link!=null) {
             case true:
-                return <><label>Найдено <label className='war'>{link.response.count}</label> сокращенные ссылки </label>
+                return <>{link.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><label>Найдено <label className='war'>{link.response.count}</label> сокращенные ссылки </label>
                 <table className='table'>
                     <thead>
                         <th>№</th>
@@ -40,7 +42,7 @@ const OtherSholdLinkPage = () =>{
                         })}
                     </tbody>
                 </table>
-            </>
+                </>}</>
          default: return<></>
     }
     })()}

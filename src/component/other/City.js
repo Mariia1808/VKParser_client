@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { getCities, getCountries, getRegions } from '../../http/API_other';
 import Select from 'react-select';
 import SendIcon from '@mui/icons-material/Send';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const OtherCityPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -39,8 +40,12 @@ const OtherCityPage = () =>{
     }
 
     const [city, setCity] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
-        getCities(decodedData.token, selectedCountry.value, selectedRegion.value).then(data => setCity(data))
+        setLoading(true)
+        let SelectedCountry = (selectedCountry===null? null:selectedCountry.value)
+        let SelectedRegion = (selectedRegion===null? null:selectedRegion.value)
+        getCities(decodedData.token, SelectedCountry, SelectedRegion).then(data => setCity(data)).finally(()=>setLoading(false))
     }
 
     const [selectedCountry, setSelectedCountry] = useState(null)
@@ -53,9 +58,9 @@ const OtherCityPage = () =>{
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedCountry} onChange={setSelectedCountry} onMenuClose={()=>get_region()} options={countries} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} options={regions} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {

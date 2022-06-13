@@ -11,6 +11,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
 import CsvLink from 'react-csv-export';
 import Select from 'react-select';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
 
 
 const GroupsCategoriesPage = () =>{
@@ -35,43 +39,71 @@ const GroupsCategoriesPage = () =>{
     })
       
     const [categories, setCategories] = useState(null)
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
         console.log(selectedOption)
-        getCatalog(decodedData.token, selectedOption.value).then(data => data.response===undefined? setCategories(null):setCategories(data.response))
+        let SelectedOption = (selectedOption===null? null:selectedOption.value)
+        getCatalog(decodedData.token, SelectedOption).then(data => setCategories(data)).finally(()=>setLoading(false))
+        }else{
+            setOpen_error(true)
+        }
     }
-    const Save =()=>{
-        SaveHistory(JSON.stringify(categories.items), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(categories.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
   return (
 <>
     <div className='content con'>
         <h3 className='h'>Поиск по категории</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <Select className='select' placeholder='Выберите категорию' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
     switch (categories!=null) {
         case true:
-            return <div className='content con w'>
+            return <>{categories.response===undefined?
+                <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    :<><div className='content con w'>
             <div className='shapka'>
                 <div>
                     <label>Найденно сообществ: </label><label className='war'>{categories.count}</label>
                 </div>
                 <div>
-                    <CsvLink data={categories} fileName={NameZapros} >
+                    <CsvLink data={categories.response.items} fileName={NameZapros} >
                         <IconButton color="primary" variant="outlined">
                             <SaveAltIcon/>
                         </IconButton>
                     </CsvLink>
                     <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                    <IconButton color="primary" variant="outlined"><DeleteForeverIcon/></IconButton>
+                    
                 </div>
             </div>
+            <Collapse in={open}>
+                <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>}sx={{ mb: 2 }}>
+                        Запрос успешно сохранен
+                </Alert>
+            </Collapse>
             <table className='table'>
             <thead>
                 <th>№</th>
@@ -85,7 +117,7 @@ const GroupsCategoriesPage = () =>{
                 <th>Рекламодатель</th>
             </thead>
             <tbody>
-            {categories.items.map((data, index)=>{
+            {categories.response.items.map((data, index)=>{
                 return <tr>
                     <td>{index+1}</td>
                     <td>{data.id}</td>
@@ -133,8 +165,9 @@ const GroupsCategoriesPage = () =>{
                 </tbody>
             </table>
         </div>
+        </>}</>
         default:
-            return <div className='content'>По вашему запросу ничего не найдено</div>
+            return <></>
         }
     })()} 
 </>

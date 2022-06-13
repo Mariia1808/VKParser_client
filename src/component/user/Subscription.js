@@ -15,6 +15,11 @@ import CsvLink from 'react-csv-export';
 import Select from 'react-select';
 import { getSubscriptions } from '../../http/API_user';
 import { SaveHistory } from '../../http/API_main';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 
 
@@ -37,19 +42,20 @@ const UserSubscriptionPage = () =>{
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
 
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
         let field = `members_count,`
         console.log(field)
         if(selectedOption!=null)
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
-        getSubscriptions(decodedData.token, name, field).then(data=>
-        {
-        if(data.response!=undefined){
-            setInfo(data)
-            setError(null)
+        let Name = (name===''? null:name)
+        getSubscriptions(decodedData.token, Name, field).then(data=>setInfo(data)).finally(()=>setLoading(false))
         }else{
-            setError('Невозможно получить подписки выбранного человека')
-        }})
+            setOpen_error(true)
+        }
         console.log(info)
     }
     const Delete = () =>{
@@ -58,8 +64,12 @@ const UserSubscriptionPage = () =>{
         setNameZapros('')
         setSelectedOption(null)
     }
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
 return (
@@ -67,12 +77,19 @@ return (
     <div className='content con'>
         <h3 className='h'>Подписки пользователя</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+            </Collapse>
             <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
             <div className='div1'>
-                <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-                Продолжить  
-                </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
             </div>
         </div>
     </div>
@@ -86,7 +103,9 @@ return (
         {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{info.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                 <div className='shapka'>
                     <div>
                         <label>Найденное количество подписок: </label><label className='war'>{info.response.count}</label>
@@ -98,9 +117,16 @@ return (
                             </IconButton>
                         </CsvLink>
                         <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Delete()}><DeleteForeverIcon/></IconButton>
+    
                     </div>
                 </div>
+                <Collapse in={open}>
+                    <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                        <CloseIcon fontSize="inherit" />
+                        </IconButton>}sx={{ mb: 2 }}>
+                            Запрос успешно сохранен
+                    </Alert>
+                </Collapse>
                 <table className='table'>
                     <thead>
                         <th>id</th>
@@ -150,6 +176,7 @@ return (
                     </tbody>
                 </table>
             </div>
+            </>}</>
             default:
                 return <></>
             }

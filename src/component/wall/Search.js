@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import { searchWall } from '../../http/API_wall';
 import { resolveScreenName } from '../../http/API_other';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const WallSearchPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -12,20 +13,27 @@ const WallSearchPage = () =>{
 
     const [name, setName] = useState(null)
     const [nameZapros, setNameZapros] = useState(null)
+    const [nameZs, setNameZs] = useState(null)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
     const [main, setMain] = useState(null)
-
+    const [loading, setLoading]=useState(false)
     const Send = async () =>{
+        setLoading(true)
         setInfo(null)
         let ids=``
         const id = await resolveScreenName(decodedData.token, name)
-        if(id[0].type==='group'){
+        if(id!==''){
+            if(id[0].type==='group'){
             ids = `-`+ id[0].object_id
-        }else if(id[0].type==='user'){
-            ids = id[0].object_id
+            }else if(id[0].type==='user'){
+                ids = id[0].object_id
+            }
+        }else{
+            ids=null
         }
-        const data = await searchWall(decodedData.token, ids, `"${nameZapros}"`)
+        let Name = (nameZs===''? null:nameZs)
+        const data = await searchWall(decodedData.token, ids, `"${Name}"`).finally(()=>setLoading(false))
         setInfo(data)
         let copy = []
         let arr = []
@@ -49,11 +57,11 @@ const WallSearchPage = () =>{
     <div className='content con'>
         <h3>Поиск записи</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите запрос" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZs(e.target.value)} label="Введите запрос" />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {

@@ -15,6 +15,10 @@ import CsvLink from 'react-csv-export';
 import Select from 'react-select';
 import { getUser_followers } from '../../http/API_user';
 import { SaveHistory } from '../../http/API_main';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
 
 
 const UserFollowersPage = () =>{
@@ -22,42 +26,36 @@ const UserFollowersPage = () =>{
     let decodedData = jwt_decode(storedToken);
     const location = useLocation()
     
-    const field = 'about,activities,bdate,blacklisted,blacklisted_by_mebooks,can_post,can_see_all_posts,can_see_audio,can_send_friend_request,can_write_private_message,career,city,common_count,connections,contacts,country,crop_photo,domain,education,exports,followers_count,friend_status,games,has_mobile,has_photo,home_town,interests,is_favorite,is_friend,is_hidden_from_feed,last_seen,lists,maiden_name,military,movies,music,nickname,occupation,online,personal,photo_id,photo_max,photo_max_orig,quotes,relation,relatives,schools,screen_name,sex,site,status,timezone,tv,universities,verified,wall_comments'
-
     const [selectedOption, setSelectedOption] = useState(null)
-
-    let data = [{value: '',label:'Основные'},
-    {value: '',label:'Дополнительные'}]
+    let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
+    {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
+    {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
+    {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
+    {value: 'common_count,connections,contacts,crop_photo,domain,exports,quotes,has_photo,has_mobile,,photo_100,status,is_favorite,occupation,online,photo_id', label:'Прочее'}]
 
     const [name, setName] = useState(null)
     const [NameZapros, setNameZapros] = useState(null)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
 
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
-        let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,`
+        setLoading(true)
+        let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,sex,`
         console.log(field)
         if(selectedOption!=null)
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
-        getUser_followers(decodedData.token, name, field).then(data=>
-        {
-        if(data.response!=undefined){
-            setInfo(data)
-            setError(null)
-        }else{
-            setError('Невозможно получить подписчиков выбранного человека')
-        }})
+        let Name = (name===''? null:name)
+        getUser_followers(decodedData.token, Name, field).then(data=>setInfo(data)).finally(()=>setLoading(false))
         console.log(info)
     }
 
-    const Delete = () =>{
-        setInfo(null)
-        setName('')
-        setNameZapros('')
-        setSelectedOption(null)
-    }
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
   return (
@@ -67,11 +65,11 @@ const UserFollowersPage = () =>{
         <div >
             <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
             <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
-             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} isMulti closeMenuOnSelect={false} />
+             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
              <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
         </div>
     </div>
@@ -85,7 +83,9 @@ const UserFollowersPage = () =>{
         {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{info.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                 <div className='shapka'>
                     <div>
                         <label>Найденное количество подписичков: </label><label className='war'>{info.response.count}</label>
@@ -97,9 +97,16 @@ const UserFollowersPage = () =>{
                             </IconButton>
                         </CsvLink>
                         <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Delete()}><DeleteForeverIcon/></IconButton>
+                        
                     </div>
                 </div>
+                <Collapse in={open}>
+                        <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                                Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
                 <table className='table'>
         <thead>
             <th>№</th>
@@ -173,6 +180,7 @@ const UserFollowersPage = () =>{
             </tbody>
         </table>
             </div>
+            </>}</>
             default:
                 return <></>
             }

@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import { getUniversities, getCities, getCountries, getRegions } from '../../http/API_other';
 import Select from 'react-select';
 import SendIcon from '@mui/icons-material/Send';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const OtherUniversitiesPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -54,10 +54,12 @@ const OtherUniversitiesPage = () =>{
         console.log(cities)
     }
     const [universite, setUniversites] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
-        console.log(selectedCity)
-        console.log(selectedCountry)
-        getUniversities(decodedData.token, selectedCountry.value, selectedCity.value).then(data => setUniversites(data))
+        setLoading(true)
+        let SelectedCountry = (selectedCountry===null? null:selectedCountry.value)
+        let SelectedCity = (selectedCity===null? null:selectedCity.value)
+        getUniversities(decodedData.token, SelectedCountry, SelectedCity).then(data => setUniversites(data)).finally(()=>setLoading(false))
     }
 
     const [selectedCountry, setSelectedCountry] = useState(null)
@@ -72,15 +74,17 @@ const OtherUniversitiesPage = () =>{
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={()=>get_city()} options={regions} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} options={cities} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
         {(() => {
             switch (universite!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{universite.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                     <label>Найдено <label className='war'>{universite.response.count}</label> университетов </label>
                 <table className='table'>
                     <thead>
@@ -98,7 +102,7 @@ const OtherUniversitiesPage = () =>{
                         })}
                     </tbody>
                 </table>
-                </div>
+                </div></>}</>
             default: return<></>
         }
         })()}

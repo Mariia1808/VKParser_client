@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import { getCountries, getRegions } from '../../http/API_other';
 import Select from 'react-select';
 import SendIcon from '@mui/icons-material/Send';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 const OtherRegionsPage = () =>{
     
     const [country, setCountry] = useState([])
@@ -29,9 +29,12 @@ const OtherRegionsPage = () =>{
     })
       
     const [region, setRegion] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
+        setLoading(true)
         console.log(selectedOption)
-        getRegions(decodedData.token, selectedOption.value).then(data => setRegion(data))
+        let SelectedOption = (selectedOption===null? null:selectedOption.value)
+        getRegions(decodedData.token, SelectedOption).then(data => setRegion(data)).finally(()=>setLoading(false))
     }
     
 
@@ -40,9 +43,9 @@ const OtherRegionsPage = () =>{
         <h3 className='h'>Регионы</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
         
     </div>
@@ -50,7 +53,9 @@ const OtherRegionsPage = () =>{
         {(() => {
             switch (region!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{region.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                     <label>Найдено <label className='war'>{region.response.count}</label> региона </label>
                 <table className='table'>
                     <thead>
@@ -68,7 +73,7 @@ const OtherRegionsPage = () =>{
                         })}
                     </tbody>
                 </table>
-                </div>
+                </div></>}</>
             default: return<></>
         }
         })()}

@@ -11,6 +11,11 @@ import { IconButton } from '@mui/material';
 import CsvLink from 'react-csv-export';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { resolveScreenName } from '../../http/API_other';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 const MediaInfoVideoPage = () =>{
 
@@ -23,7 +28,11 @@ const MediaInfoVideoPage = () =>{
     const [info, setInfo] = useState(null)
     const [T, setT] = useState(false)
 
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = async () =>{
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
         let ids = ``
         console.log(Video)
         if(Video===''){setVideo(null) 
@@ -31,20 +40,32 @@ const MediaInfoVideoPage = () =>{
         if(Albom===''){setAlbom(null) 
             setT(true)}
         const id = await resolveScreenName(decodedData.token, ID)
-        if(id[0].type==='group'){
-            ids = `-`+ id[0].object_id
-        }else if(id[0].type==='user'){
-            ids = id[0].object_id
-        }
+        if(id!==''){
+            if(id[0].type==='group'){
+                ids = `-`+ id[0].object_id
+            }else if(id[0].type==='user'){
+                ids = id[0].object_id
+            }
+        }else{
+                ids=null
+            }
         if(ID===null){
             ids = null
         }
         console.log(ids)
-        getInfoVideo(decodedData.token, ids, Albom).then(data=>setInfo(data))
+        let albom = (Albom===''? null:Albom)
+        getInfoVideo(decodedData.token, ids, albom).then(data=>setInfo(data)).finally(()=>setLoading(false))
+        }else{
+            setOpen_error(true)
+        }
     }
 
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
     const Delete = () =>{
@@ -60,20 +81,29 @@ const MediaInfoVideoPage = () =>{
 <>
     <div className='content con' >
         <h3 className='h'>Информация о видео</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setID(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         {/* <TextField className='text' id="filled-basic" onChange={e=>setVideo(e.target.value)} label="Введите идентификаторы видеозаписей" /> */}
             <TextField className='text' id="filled-basic" onChange={e=>setAlbom(e.target.value)} label="Введите идентификатор альбома" />
             <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
     switch (info!=null) {
         case true:
-            return <div className='content w'>
+            return <>{info.response===undefined?
+                <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    :<><div className='content w'>
             <div className='shapka'>
                 <div>
                     <label>Найденно видеозаписей: </label><label className='war'>{info.response.count}</label>
@@ -85,7 +115,7 @@ const MediaInfoVideoPage = () =>{
                         </IconButton>
                     </CsvLink>
                     <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                    <IconButton color="primary" variant="outlined" onClick={()=>Delete()}><DeleteForeverIcon/></IconButton>
+                    
                 </div>
             </div>
             <table className='table'>
@@ -124,6 +154,7 @@ const MediaInfoVideoPage = () =>{
                 </tbody>
             </table>
         </div>
+        </>}</>
         default:
             return <></>
         }

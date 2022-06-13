@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import { statsAppAll } from '../../http/API_statictics';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const StatisticApplicationPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -12,8 +12,11 @@ const StatisticApplicationPage = () =>{
     const [name, setName] = useState(null)
     const [info, setInfo] = useState(null)
 
+    const [loading, setLoading]=useState(false)
     const Send = () =>{
-        statsAppAll(decodedData.token, name).then(data=>setInfo(data))
+        setLoading(true)
+        let Name = (name===''? null:name)
+        statsAppAll(decodedData.token, Name).then(data=>setInfo(data)).finally(()=>setLoading(false))
     }
     
   return (
@@ -21,9 +24,9 @@ const StatisticApplicationPage = () =>{
         <h3 className='h'>Статистика приложения</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор приложения" />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
         
     </div>

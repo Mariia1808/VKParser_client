@@ -9,6 +9,11 @@ import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
 import CsvLink from 'react-csv-export';
 import { SaveHistory } from '../../http/API_main';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 const MediaInfoPhotoPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -17,12 +22,24 @@ const MediaInfoPhotoPage = () =>{
     const [name, setName] = useState(null)
     const [photo, setPhoto] = useState(null)
 
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
-        getInfoPhoto(decodedData.token, name).then(data=>setPhoto(data))
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
+            let Name = (name===''? null:name)
+        getInfoPhoto(decodedData.token, Name).then(data=>setPhoto(data)).finally(()=>setLoading(false))
+        }else{
+            setOpen_error(true)
+        }
     }
 
-    const Save =()=>{
-        SaveHistory(JSON.stringify(photo.response), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(photo.response), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
 
@@ -30,18 +47,27 @@ const MediaInfoPhotoPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Информация о фото</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую идентификаторы фотографий" />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
         switch (photo!=null) {
         case true:
-            return <div className='content con'>
+            return <>{photo.response===undefined?
+                <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    :<><div className='content con'>
                 <div className='shapka'>
                     <div>
                         <label>Получено фотографий <label className='war'>{photo.response.length}</label>  </label>
@@ -55,6 +81,13 @@ const MediaInfoPhotoPage = () =>{
                         <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                     </div>
                 </div>
+                <Collapse in={open}>
+                        <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                                Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
             <table className='table'>
                 <thead>
                     <th>№</th>
@@ -80,6 +113,7 @@ const MediaInfoPhotoPage = () =>{
                 </tbody>
             </table>
             </div>
+            </>}</>
         default: return<></>
         }
         })()}

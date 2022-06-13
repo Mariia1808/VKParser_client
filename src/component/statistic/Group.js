@@ -16,6 +16,7 @@ import { SaveHistory } from '../../http/API_main';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Select from 'react-select';
 import {VictoryPie} from 'victory'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const StatisticGroupPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -43,9 +44,12 @@ const StatisticGroupPage = () =>{
     })
       
     const [info, setInfo] = useState(null)
+    const [loading, setLoading]=useState(false)
     const Send = async () =>{
+        setLoading(true)
         console.log(selectedOption)
-        const data = await statsGroupAll(decodedData.token, selectedOption.value)
+        let SelectedOption = (selectedOption===null? null:selectedOption.value)
+        const data = await statsGroupAll(decodedData.token, SelectedOption).finally(()=>setLoading(false))
         setInfo(data)
     }
 
@@ -55,15 +59,17 @@ const StatisticGroupPage = () =>{
         <h3 className='h'>Статистика группы за весь период</h3>
         <Select className='select' placeholder='Выберите группу' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
         switch (info!==null) {
             case true:
-                return <div>
+                return <>{info.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div>
                 <div className='content con'>
                     <h3 className='h'>Активность</h3>
                     <div className='dia'>
@@ -201,7 +207,7 @@ const StatisticGroupPage = () =>{
                     </div>
                     </div>
                 </div>
-            </div>
+            </div></>}</>
          default: return<></>
     }
     })()}

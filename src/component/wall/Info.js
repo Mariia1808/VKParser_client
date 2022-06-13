@@ -6,6 +6,7 @@ import { getWall } from '../../http/API_wall';
 import { resolveScreenName } from '../../http/API_other';
 import SendIcon from '@mui/icons-material/Send';
 import Select from 'react-select';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 
 const WallInfoPage = () =>{
@@ -20,17 +21,25 @@ const WallInfoPage = () =>{
     const [main, setMain] = useState(null)
     const [selectedOption, setSelectedOption] = useState(null)
     const [error, setError] = useState(null)
-
+    const [loading, setLoading]=useState(false)
     const Send = async () =>{
+        setLoading(true)
         setInfo(null)
         let ids=``
+        
         const id = await resolveScreenName(decodedData.token, name)
-        if(id[0].type==='group'){
-            ids = `-`+ id[0].object_id
-        }else if(id[0].type==='user'){
-            ids = id[0].object_id
+        if(id!==''){
+            if(id[0].type==='group'){
+                ids = `-`+ id[0].object_id
+            }else if(id[0].type==='user'){
+                ids = id[0].object_id
+            }
+        }else{
+            ids=null
         }
-        const data = await getWall(decodedData.token, ids, selectedOption.value)
+        let SelectedOption = (selectedOption===null? null:selectedOption.value)
+
+        const data = await getWall(decodedData.token, ids, SelectedOption).finally(()=>setLoading(false))
         setInfo(data)
         let copy = []
         let arr = []
@@ -56,9 +65,9 @@ const WallInfoPage = () =>{
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         <Select className='select' placeholder='Выберите какие записи необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {

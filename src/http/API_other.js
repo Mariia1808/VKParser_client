@@ -46,3 +46,8 @@ export const getCountriesById = async (token, country) => {
     console.log(data)
     return data
 }
+export const getSchools = async (token, city_id) => {
+    const {data} = await axios.post('http://localhost:5000/api/other/getSchools/'+token+'/'+city_id)
+    console.log(data)
+    return data
+}

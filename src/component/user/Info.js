@@ -15,44 +15,44 @@ import CsvLink from 'react-csv-export';
 import Select from 'react-select';
 import { getUser_long } from '../../http/API_user';
 import { SaveHistory } from '../../http/API_main';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 const UserInfoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
     const location = useLocation()
 
-    const field = 'activities,about,blacklisted,blacklisted_by_me,books,bdate,can_be_invited_group,can_post,can_see_all_posts,can_see_audio,'+
-    'can_send_friend_request,can_write_private_message,career,common_count,connections,contacts,city,country,crop_photo,domain,education,exports'+
-    ',followers_count,friend_status,has_photo,has_mobile,home_town,photo_100,sex,site,schools,screen_name,status,verified,games,interests,is_favorite'+
-    ',is_friend,is_hidden_from_feed,last_seen,maiden_name,military,movies,music,nickname,occupation,online,personal,photo_id,photo_max,photo_max_orig'+
-    ',quotes,relation,relatives,timezone,tv,universities'
-
     const [selectedOption, setSelectedOption] = useState(null)
 
-    let data = [{value: 'activities,about,blacklisted,blacklisted_by_me,books,bdate,can_be_invited_group,can_post,can_see_all_posts,can_see_audio',label:'Основные'},
-    {value: 'can_send_friend_request,can_write_private_message,career,common_count,connections,contacts,city,country,crop_photo,domain,education,exports',label:'Дополнительные'},
-    {value: 'followers_count,friend_status,has_photo,has_mobile,home_town,photo_100,sex,site,schools,screen_name,status,verified,games,interests,is_favorite',label:'Дополнительные1'},
-    {value: 'is_friend,is_hidden_from_feed,last_seen,maiden_name,military,movies,music,nickname,occupation,online,personal,photo_id,photo_max,photo_max_orig',label:'Дополнительные2'},
-    {value: 'quotes,relation,relatives,timezone,tv,universities',label:'Дополнительные3'}]
+    let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
+    {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
+    {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
+    {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
+    {value: 'common_count,connections,contacts,crop_photo,domain,exports,quotes,has_photo,has_mobile,,photo_100,status,is_favorite,occupation,online,photo_id', label:'Прочее'}]
 
     const [name, setName] = useState(null)
     const [NameZapros, setNameZapros] = useState(null)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
     
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
-        let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,`
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
+        let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,sex,`
         console.log(field)
         if(selectedOption!=null)
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
-        getUser_long(decodedData.token, name, field).then(data=>
-        {
-        if(data.response!=undefined){
-            setInfo(data)
-            setError(null)
+        let Name = (name===''? null:name)
+        getUser_long(decodedData.token, Name, field).then(data=>setInfo(data)).finally(()=>setLoading(false))
         }else{
-            setError('')
-        }})
+            setOpen_error(true)
+        }
         console.log(info)
     }
 
@@ -62,8 +62,12 @@ const UserInfoPage = () =>{
         setNameZapros('')
         setSelectedOption(null)
     }
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
   return (
@@ -71,28 +75,30 @@ const UserInfoPage = () =>{
     <div className='content con'>
         <h3 className='h'>Расширенная информация о пользователе(-ях)</h3>
         <div >
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
            
-        <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} isMulti closeMenuOnSelect={false} />
+        <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
         <div className='div1'>
-            <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-            Продолжить  
-            </Button>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
         </div>
     </div>
-    {(() => {
-    switch (error!=null) {
-        case true:
-            return <div className='content'>{error}</div>
-        default: return<></>
-    }
-    })()} 
         {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content con w'>
+                return <>{info.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content con w'>
                 <div className='shapka'>
                     <div>
                         <label>Число пользователей: </label><label className='war'>{info.response.length}</label>
@@ -104,9 +110,16 @@ const UserInfoPage = () =>{
                             </IconButton>
                         </CsvLink>
                         <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Delete()}><DeleteForeverIcon/></IconButton>
+                        
                     </div>
                 </div>
+                <Collapse in={open}>
+                        <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                                Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
                 <table className='table'>
                 <thead>
                     <th>№</th>
@@ -179,7 +192,7 @@ const UserInfoPage = () =>{
                 })}
                     </tbody>
                 </table>
-            </div>
+            </div></>}</>
             default:
                 return <></>
             }

@@ -12,6 +12,11 @@ import CsvLink from 'react-csv-export';
 import Select from 'react-select';
 import { getCities, getRegions } from '../../http/API_other';
 import { searchEvent } from '../../http/API_groups';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
+
 
 const EventSearchPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -38,13 +43,27 @@ const EventSearchPage = () =>{
     const [info, setInfo] = useState(null)
     const [t, setT] = useState(null)
     
+    const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
-        searchEvent(decodedData.token, name, selectedCity.value, selectedOption.value).then(data=> setInfo(data))
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
+            let Name = (name===''? null:name)
+            let SelectedOption = (selectedOption===null? null:selectedOption.value)
+            let SelectedCity = (selectedCity===null? null:selectedCity.value)
+        searchEvent(decodedData.token, Name, SelectedCity, SelectedOption).then(data=> setInfo(data)).finally(()=>setLoading(false))
+        }else{
+            setOpen_error(true)
+        }
         console.log(info)
     }
 
-    const Save =()=>{
-        SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id)).then()
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
     let [cities, setCities] = useState([])
@@ -68,15 +87,22 @@ const EventSearchPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Поиск событий</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос" />
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={()=>get_city()} options={regions} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} options={cities} closeMenuOnSelect={false} />
-            <Select className='select' placeholder='Выберите правило сортировки' defaultValue={selectedOption} onChange={setSelectedOption} options={type} closeMenuOnSelect={false} />
-            <div className='div1'>
-        <Button className='menu_but button' variant="outlined" onClick={()=>Send()} endIcon={<SendIcon/>}>
-        Продолжить  
-        </Button>
+        <Select className='select' placeholder='Выберите правило сортировки' defaultValue={selectedOption} onChange={setSelectedOption} options={type} closeMenuOnSelect={false} />
+        <div className='div1'>
+            <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
+                Продолжить
+            </LoadingButton>
         </div>
     </div>
     {(() => {
@@ -91,7 +117,7 @@ const EventSearchPage = () =>{
                         <label>Всего найдено: </label><label className='war'>{info.response.count}</label>
                     </div>
                     <div>
-                        <CsvLink data={info.response} fileName={NameZapros} >
+                        <CsvLink data={info.response.items} fileName={NameZapros} >
                             <IconButton color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
@@ -99,6 +125,13 @@ const EventSearchPage = () =>{
                         <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                     </div>
                 </div>
+                <Collapse in={open}>
+                        <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                                Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
                 <table className='table'>
                 <thead>
                     <th>№</th>

@@ -5,7 +5,19 @@ import { $authHost, $host } from ".";
 export const SaveHistory = async (itog, name, id) => {
     let formData = JSON.stringify({'itog': itog})
     console.log(formData)
-    const {data} = await axios.post('http://localhost:5000/api/main/'+name+'/'+id, {itog})
+    const {data} = await axios.post('http://localhost:5000/api/main/save/'+name+'/'+id, {itog})
+    console.log(data)
+    return data
+}
+
+export const get = async (id) => {
+    const {data} = await axios.post('http://localhost:5000/api/main/history/'+id)
+    console.log(data)
+    return data
+}
+
+export const delete_history = async (id) => {
+    const {data} = await axios.post('http://localhost:5000/api/main/delete/'+id)
     console.log(data)
     return data
 }
