@@ -5,7 +5,15 @@ import TextField from '@mui/material/TextField';
 import { resolveScreenName } from '../../http/API_other';
 import { getCommentsWall } from '../../http/API_comments';
 import SendIcon from '@mui/icons-material/Send';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import { IconButton } from '@mui/material';
+import CsvLink from 'react-csv-export';
+import { SaveHistory } from '../../http/API_main';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
 
 const CommentAboutPostPage = () =>{
     const storedToken = localStorage.getItem("token");
@@ -16,32 +24,53 @@ const CommentAboutPostPage = () =>{
     const [post_id, setPost] = useState(null)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
+    const [NameZapros, setNameZapros] = useState(null)
     const [main, setMain] = useState(null)
-
+    const [open_error, setOpen_error] = useState(false);
     const [loading, setLoading]=useState(false)
     const Send = async () =>{
-        setLoading(true)
-        setInfo(null)
-        let ids=``
-        const id = await resolveScreenName(decodedData.token, name)
-        if(id!==''){
-            if(id[0].type==='group'){
-                ids = `-`+ id[0].object_id
-            }else if(id[0].type==='user'){
-                ids = id[0].object_id
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
+            setInfo(null)
+            let ids=``
+            const id = await resolveScreenName(decodedData.token, name)
+            if(id!==''){
+                if(id[0].type==='group'){
+                    ids = `-`+ id[0].object_id
+                }else if(id[0].type==='user'){
+                    ids = id[0].object_id
+                }
+            }else{
+                ids=null
             }
+            let Post_id = (post_id===''? null:post_id)
+            const data = await getCommentsWall(decodedData.token, ids, Post_id).finally(()=>setLoading(false))
+            setInfo(data)
         }else{
-            ids=null
+            setOpen_error(true)
         }
-        let Post_id = (post_id===''? null:post_id)
-        const data = await getCommentsWall(decodedData.token, ids, Post_id).finally(()=>setLoading(false))
-        setInfo(data)
+    }
+
+    const [open, setOpen] = useState(false);
+    const Save = async ()=>{
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        if(data.response==='no_error'){
+            setOpen(true)
+        }
     }
 
   return (
 <>
     <div className='content con'>
         <h3 className='h'>Комментарии к записи</h3>
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         <TextField className='text' id="filled-basic" onChange={e=>setPost(e.target.value)} label="Введите идентификатор записи" />
         <div className='div1'>
@@ -61,7 +90,23 @@ const CommentAboutPostPage = () =>{
                     <div>
                         <label>Получено комментариев <label className='war'>{info.response.items.length}</label></label>
                     </div>
+                    <div>
+                        <CsvLink data={info.response.items} fileName={NameZapros} >
+                            <IconButton color="primary" variant="outlined">
+                                <SaveAltIcon/>
+                            </IconButton>
+                        </CsvLink>
+                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        
+                    </div>
                 </div>
+                <Collapse in={open}>
+                    <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                        <CloseIcon fontSize="inherit" />
+                        </IconButton>}sx={{ mb: 2 }}>
+                            Запрос успешно сохранен
+                    </Alert>
+                </Collapse>
             <div>
             <table className='table'>
                 <thead>

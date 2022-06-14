@@ -41,7 +41,7 @@ const UserInfoPage = () =>{
     
     const [loading, setLoading]=useState(false)
     const [open_error, setOpen_error] = useState(false);
-    const Send = () =>{
+    const Send = async () =>{
         if((NameZapros!==null)&&(NameZapros!=='')){
             setLoading(true)
         let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,sex,`
@@ -49,7 +49,8 @@ const UserInfoPage = () =>{
         if(selectedOption!=null)
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
         let Name = (name===''? null:name)
-        getUser_long(decodedData.token, Name, field).then(data=>setInfo(data)).finally(()=>setLoading(false))
+            const data = await getUser_long(decodedData.token, Name, field).finally(()=>setLoading(false))
+            setInfo(data)
         }else{
             setOpen_error(true)
         }

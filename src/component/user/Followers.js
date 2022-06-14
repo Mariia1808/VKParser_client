@@ -36,7 +36,7 @@ const UserFollowersPage = () =>{
     const [name, setName] = useState(null)
     const [NameZapros, setNameZapros] = useState(null)
     const [info, setInfo] = useState(null)
-    const [error, setError] = useState(null)
+    const [open_error, setOpen_error] = useState(false)
 
     const [loading, setLoading]=useState(false)
     const Send = () =>{
@@ -63,7 +63,14 @@ const UserFollowersPage = () =>{
     <div className='content con'>
         <h3 className='h'>Подписчики пользователя</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса" />
+            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <Collapse in={open_error}>
+                <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>}sx={{ mb: 2 }}>
+                    Вы не ввели название запроса
+                </Alert>
+            </Collapse>
             <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
              <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
              <div className='div1'>
@@ -73,13 +80,6 @@ const UserFollowersPage = () =>{
         </div>
         </div>
     </div>
-    {(() => {
-    switch (error!=null) {
-        case true:
-            return <div className='content'>{error}</div>
-        default: return<></>
-    }
-    })()} 
         {(() => {
         switch (info!=null) {
             case true:
@@ -101,13 +101,13 @@ const UserFollowersPage = () =>{
                     </div>
                 </div>
                 <Collapse in={open}>
-                        <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
-                            <CloseIcon fontSize="inherit" />
-                            </IconButton>}sx={{ mb: 2 }}>
-                                Запрос успешно сохранен
-                        </Alert>
-                    </Collapse>
-                <table className='table'>
+                    <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                        <CloseIcon fontSize="inherit" />
+                        </IconButton>}sx={{ mb: 2 }}>
+                            Запрос успешно сохранен
+                    </Alert>
+                </Collapse>
+            <table className='table'>
         <thead>
             <th>№</th>
             <th>id</th>

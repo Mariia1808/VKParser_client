@@ -5,7 +5,15 @@ import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import { resolveScreenName } from '../../http/API_other';
 import { getRepostsWall } from '../../http/API_wall';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import { IconButton } from '@mui/material';
+import CsvLink from 'react-csv-export';
+import { SaveHistory } from '../../http/API_main';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Collapse from '@mui/material/Collapse';
 
 
 const WallRepostPage = () =>{
@@ -16,47 +24,75 @@ const WallRepostPage = () =>{
     const [post_id, setPost] = useState(null)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
+    const [NameZapros, setNameZapros] = useState(null)
     const [main, setMain] = useState(null)
     const [loading, setLoading]=useState(false)
+    const [open_error, setOpen_error] = useState(false);
     const Send = async () =>{
-        setLoading(true)
-        setInfo(null)
-        let ids=``
-        const id = await resolveScreenName(decodedData.token, name)
-        if(id!==''){
-            if(id[0].type==='group'){
-                ids = `-`+ id[0].object_id
-            }else if(id[0].type==='user'){
-                ids = id[0].object_id
+        if((NameZapros!==null)&&(NameZapros!=='')){
+            setLoading(true)
+            setInfo(null)
+            let ids=``
+            const id = await resolveScreenName(decodedData.token, name)
+            if(id!==''){
+                if(id[0].type==='group'){
+                    ids = `-`+ id[0].object_id
+                }else if(id[0].type==='user'){
+                    ids = id[0].object_id
+                }
+            }else{
+                ids=null
             }
+            let Post_id = (post_id===''? null:post_id)
+            const data = await getRepostsWall(decodedData.token, ids, Post_id).finally(()=>setLoading(false))
+            setInfo(data)
+            let copy = []
+            let arr = []
+            
+            if(data.response!==undefined){
+                data.response.groups.map(datas=>{
+                if(datas!=undefined){
+                    copy.push({...datas})
+                }})
+                data.response.profiles.map(datas=>{
+                if(datas!=undefined){
+                    arr.push({...datas})
+                }
+            })
+            }
+            console.log(copy)
+            setCopy(copy)
+            setMain(arr)
         }else{
-            ids=null
+            setOpen_error(true)
         }
-        let Post_id = (post_id===''? null:post_id)
-        const data = await getRepostsWall(decodedData.token, ids, Post_id).finally(()=>setLoading(false))
-        setInfo(data)
-        let copy = []
-        let arr = []
-        
-        if(data.response!==undefined){
-            data.response.groups.map(datas=>{
-            if(datas!=undefined){
-                copy.push({...datas})
-            }})
-            data.response.profiles.map(datas=>{
-            if(datas!=undefined){
-                arr.push({...datas})
-            }
-        })
-        }
-        console.log(copy)
-        setCopy(copy)
-        setMain(arr)
     }
+        const [open, setOpen] = useState(false)
+        const Save = async ()=>{
+            const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id))
+            if(data.response==='no_error'){
+                setOpen(true)
+            }
+        }
+        const [open1, setOpen1] = useState(false)
+        const Save1 = async ()=>{
+            const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id))
+            if(data.response==='no_error'){
+                setOpen1(true)
+            }
+        }
   return (
 <>
     <div className='content con'>
         <h3 className='h zag'>Информация о репостах записи</h3>
+        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <Collapse in={open_error}>
+            <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
+                <CloseIcon fontSize="inherit" />
+                </IconButton>}sx={{ mb: 2 }}>
+                   Вы не ввели название запроса
+            </Alert>
+        </Collapse>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         <TextField className='text' id="filled-basic" onChange={e=>setPost(e.target.value)} label="Введите идентификатор записи" />
         <div className='div1'>
@@ -74,11 +110,26 @@ const WallRepostPage = () =>{
             <div className='content con'>
                 <div className='shapka'>
                     <div>
-                        <label>Получено репостов <label className='war'>{info.response.groups.length+info.response.profiles.length}</label></label>
+                        <label>Пользователей, которые репостнули запись <label className='war'>{info.response.profiles.length}</label></label>
+                    </div>
+                    <div>
+                        <CsvLink data={main} fileName={NameZapros} >
+                            <IconButton color="primary" variant="outlined">
+                                <SaveAltIcon/>
+                            </IconButton>
+                        </CsvLink>
+                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        
                     </div>
                 </div>
+                <Collapse in={open}>
+                    <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                        <CloseIcon fontSize="inherit" />
+                        </IconButton>}sx={{ mb: 2 }}>
+                            Запрос успешно сохранен
+                    </Alert>
+                </Collapse>
             <div>
-            <h3 className='h'>Пользователи, которые репостнули запись</h3>
             <table className='table'>
                 <thead>
                     <th>№</th>
@@ -112,7 +163,27 @@ const WallRepostPage = () =>{
                     }
                 </tbody>
             </table>
-            <h3 className='h'>Сообщества, которые рупостнули запись</h3>
+                <div className='shapka'>
+                    <div>
+                        <label>Сообществ, которые репостнули запись <label className='war'>{info.response.groups.length}</label></label>
+                    </div>
+                    <div>
+                        <CsvLink data={copyes} fileName={NameZapros} >
+                            <IconButton color="primary" variant="outlined">
+                                <SaveAltIcon/>
+                            </IconButton>
+                        </CsvLink>
+                        <IconButton color="primary" variant="outlined" onClick={()=>Save1()}><SaveAsIcon/></IconButton>
+                        
+                    </div>
+                </div>
+                <Collapse in={open1}>
+                    <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen1(false);}}>
+                        <CloseIcon fontSize="inherit" />
+                        </IconButton>}sx={{ mb: 2 }}>
+                            Запрос успешно сохранен
+                    </Alert>
+                </Collapse>
                 <table className='table'>
                 <thead>
                     <th>№</th>

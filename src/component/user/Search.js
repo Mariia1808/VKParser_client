@@ -31,6 +31,7 @@ const UserSearchPage = () =>{
     const [value, setValue] = React.useState('1');
     const handleChange = (event, newValue) => {
       setValue(newValue);
+      setInfo(null)
     };
 
     const [selectedFields, setSelectedFields] = useState(null)
