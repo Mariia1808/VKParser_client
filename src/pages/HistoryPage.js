@@ -7,16 +7,23 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
 import CsvLink from 'react-csv-export';
+import Button from '@mui/material/Button';
+import LoginIcon from '@mui/icons-material/Login';
 
 const HistoryPage = () =>{
     
-    const storedToken = localStorage.getItem("token");
-    let decodedData = jwt_decode(storedToken);
+    
+    let decodedData = null
 
     const [history, setHistory] = useState(null)
 
     useEffect(() =>{
-        get(decodedData.user_id).then(data => setHistory(data))
+        if(localStorage.length!==0){
+            const storedToken = localStorage.getItem("token");
+            decodedData = jwt_decode(storedToken);
+            get(decodedData.user_id).then(data => setHistory(data))
+        }
+       
     },[])
 
     const[T, setT]=useState(false)
@@ -27,7 +34,8 @@ const HistoryPage = () =>{
     }
 
     return (
-    <div className="content content_wall">
+<>{localStorage.length!==0?
+    <div className="content content_wall pad">
        {(() => {
         switch (history!=null) {
             case true:
@@ -50,11 +58,11 @@ const HistoryPage = () =>{
                             <td>{data.zapros}</td>
                             <td>
                                 <CsvLink data={data.itog} fileName={data.zapros} >
-                                    <IconButton color="primary" variant="outlined">
+                                    <IconButton title='Экспорт' color="primary" variant="outlined">
                                         <SaveAltIcon/>
                                     </IconButton>
                                 </CsvLink>
-                                <IconButton color="primary" variant="outlined" onClick={()=>Delete(data.id)}>
+                                <IconButton color="primary" title='Удалить' variant="outlined" onClick={()=>Delete(data.id)}>
                                     <DeleteForever/>
                                 </IconButton>
                             </td>
@@ -68,6 +76,15 @@ const HistoryPage = () =>{
     }
     })()}
     </div>
+    :
+    <div className="content content_wall c">
+        <label>Перед началом работы необходимо авторизоваться.</label><br/>
+        <Button className='button' variant="outlined" endIcon={<LoginIcon />}><a href='https://oauth.vk.com/authorize?client_id=8143523&revoke=1&redirect_uri=http://localhost:3000/main&display=page&scope=friends,offline,photos,audio,video,wall,groups,email,stats,ads,market&response_type=code'>Вход</a></Button>
+        <br/><label><label className='war'>ВАЖНО:</label> необходимо передоставить права ко всем пунктам, в том числе к email.
+        Даже если ваш текущий email другой, он необходим для создания личного кабинета.</label>
+    </div>
+ }
+</>
   );
 }
 

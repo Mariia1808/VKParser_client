@@ -92,11 +92,11 @@ const UserFollowersPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={info.response.items} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>
@@ -127,7 +127,7 @@ const UserFollowersPage = () =>{
                return <tr>
                    <td>{index+1}</td>
                    <td>{data.id}</td>
-                   <td><>{data.screen_name}</></td>
+                   <td>{data.screen_name}</td>
                    <td>{data.first_name}</td>
                    <td>{data.last_name}</td>
                    <td>{(() => {

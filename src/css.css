@@ -161,12 +161,27 @@
 .p{
     max-width: 70%;
 }
-.birth{
-   
-}
 .bdiv{
     display: flex;
     flex-direction: row;
     /* width: 400px; */
     justify-content: center;
+}
+.pad{
+    margin-bottom: 50px;
+}
+.link{
+    margin-top: 0px;
+    margin-left: 50px;
+}
+.link_div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: stretch;
+    margin-top: 20px;
+}
+.f{
+    margin-bottom: 0;
 }

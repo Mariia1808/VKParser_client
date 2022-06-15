@@ -12,13 +12,12 @@ import { check } from './http/API_main';
 
 
 const App = observer(() => {
-    const {user} =useContext(Context)
-    useEffect(()=>{
-            check().then(data =>{
-                user.setUser(data)
-                user.setIsAuth(true)
-            })
-    }, [])
+    // const {user} =useContext(Context)
+    // useEffect(()=>{
+    //         check().then(data =>{
+    //             user.setIsAuth(true)
+    //         })
+    // }, [])
   return (
     <BrowserRouter>
         <Header/>

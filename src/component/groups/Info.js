@@ -78,18 +78,18 @@ const GroupsInfoPage = () =>{
             case true:
                 return <>{info.response===undefined?
                     <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
-                        :<><div className='content con w'>
+                        :<><div className='content con p'>
                 <div className='shapka'>
                     <div>
                         <label>Число сообществ: </label><label className='war'>{info.response.length}</label>
                     </div>
                     <div>
                         <CsvLink data={info.response} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>

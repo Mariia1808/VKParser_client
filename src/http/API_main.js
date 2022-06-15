@@ -23,7 +23,7 @@ export const delete_history = async (id) => {
 }
 
 export const login = async (code) => {
-    const {data} = await axios.get('http://localhost:5000/api/user/'+code)
+    const {data} = await axios.get('http://localhost:5000/api/user/login/'+code)
     console.log(data)
     localStorage.setItem('token', data.token)
     console.log(jwt_decode(data))
@@ -31,7 +31,7 @@ export const login = async (code) => {
 }
 
 export const check = async () => {
-    const {data} = await $host.get('http://localhost:5000/api/user/api/user/check' )
+    const {data} = await $host.get('http://localhost:5000/api/user/check' )
     console.log(data)
     localStorage.setItem('token', data.token)
     return data.token

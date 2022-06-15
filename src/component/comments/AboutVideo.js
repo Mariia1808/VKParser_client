@@ -87,17 +87,16 @@ const CommentAboutVideoPage = () =>{
                 :<>
             <div className='content con p'>
                 <div className='shapka'>
-                    <div>
                         <label>Получено комментариев <label className='war'>{info.response.count}</label></label>
                         <div>
                         <CsvLink data={info.response.items} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
-                        
-                    </div>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                </div>
+                
                 </div>
                 <Collapse in={open}>
                     <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
@@ -106,7 +105,6 @@ const CommentAboutVideoPage = () =>{
                             Запрос успешно сохранен
                     </Alert>
                 </Collapse>
-                </div>
             <div>
             <table className='table'>
                 <thead>

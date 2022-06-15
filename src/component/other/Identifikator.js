@@ -30,7 +30,7 @@ const OtherIdentifikatorPage = () =>{
             setLoading(true)
             names =  String(name).split(',')
             setNames(names)
-            let Name = (name===''? null:name)
+            let Name = (names===''? null:names)
             resolveScreenName(decodedData.token, Name).then(data=>setId(data)).finally(()=>setLoading(false))
         }else{
             setOpen_error(true)
@@ -75,11 +75,11 @@ const OtherIdentifikatorPage = () =>{
                 </div>
                 <div>
                     <CsvLink data={id} fileName={NameZapros} >
-                        <IconButton color="primary" variant="outlined">
+                        <IconButton title='Экспорт' color="primary" variant="outlined">
                             <SaveAltIcon/>
                         </IconButton>
                     </CsvLink>
-                    <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                    <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                 </div>
             </div>
             <Collapse in={open}>

@@ -114,11 +114,11 @@ const WallRepostPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={main} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>
@@ -169,11 +169,11 @@ const WallRepostPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={copyes} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save1()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save1()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>

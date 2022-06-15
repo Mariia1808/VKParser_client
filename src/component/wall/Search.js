@@ -83,7 +83,7 @@ const WallSearchPage = () =>{
   return (
 <>
     <div className='content con'>
-        <h3>Поиск записи</h3>
+        <h3 className='zag h'>Поиск записи</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
@@ -113,11 +113,11 @@ const WallSearchPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={main} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>
@@ -175,11 +175,11 @@ const WallSearchPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={copyes} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save1()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save1()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>

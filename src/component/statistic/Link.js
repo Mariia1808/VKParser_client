@@ -79,69 +79,87 @@ const StatisticLinkPage = () =>{
         </div>
     </div>
         {(() => {
-        switch ((info!==null)&&(country!==null)&&(city!==null)) {
+        switch (info!==null) {
         case true:
             return <>{info.response===undefined?
                 <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
-                    :<><div className='content con'>{info.response.stats.length!==0?
-                <>
-                <label>Общее число переходов: <label className='war'>{info.response.stats[0].views}</label></label>
-                <table className='table'>
-                    <thead>
-                        <th>Возраст</th>
-                        <th>Муж</th>
-                        <th>Жен</th>
-                    </thead>
-                    <tbody>
-                        {info.response.stats[0].sex_age.map((data, index)=>{
-                        return <tr>
-                            <td>{data.age_range}</td>
-                            <td>{data.female}</td>
-                            <td>{data.male}</td>
-                        </tr>
-                        })}
-                    </tbody>
-                </table>
-                <table className='table'>
-                    <thead>
-                        <th>Страна</th>
-                        <th>Кол-во</th>
-                    </thead>
-                    <tbody>
-                        {info.response.stats[0].countries.map((data, index)=>{
-                        return <tr>
-                            {country.map(i=>{
-                                if(i.id===data.country_id){
-                                    return <td>{i.title}</td>
+                    :<>
+                        {info.response.stats.length===0? <h4>Данных недостаточно для формирования статиcтики</h4>: <>
+                        {(() => {
+                            switch((country!==null)&&(city!==null)){
+                                case false:
+                                    return 
+                                case true:
+                                    return <>
+                                    <div className='content con f'><label>Общее число переходов по ссылке: <label className='war'>{info.response.stats[0].views}</label></label></div>
+                                    <div className='link_div'>
+                                    <div className='content con link'>
+                                    <label className='h zag war'>По возрасту</label>
+                                    <table className='table'>
+                                        <thead>
+                                            <th>Возраст</th>
+                                            <th>Муж</th>
+                                            <th>Жен</th>
+                                        </thead>
+                                        <tbody>
+                                            {info.response.stats[0].sex_age.map((data, index)=>{
+                                            return <tr>
+                                                <td>{data.age_range}</td>
+                                                <td>{data.female}</td>
+                                                <td>{data.male}</td>
+                                            </tr>
+                                            })}
+                                        </tbody>
+                                    </table></div>
+                                    <div className='content con link'>
+                                    <label className='h zag war'>По странам</label>
+                                    <table className='table'>
+                                        <thead>
+                                            <th>Страна</th>
+                                            <th>Кол-во</th>
+                                        </thead>
+                                        <tbody>
+                                            {info.response.stats[0].countries.map((data, index)=>{
+                                            return <tr>
+                                                {country.map(i=>{
+                                                    if(i.id===data.country_id){
+                                                        return <td>{i.title}</td>
+                                                    }
+                                                })}
+                                                 <td>{data.views}</td>
+                                            </tr>
+                                            })}
+                                        </tbody>
+                                    </table></div>
+                                    <div className='content con link'>
+                                    <label className='h zag war'>По городам</label>
+                                    <table className='table'>
+                                        <thead>
+                                            <th>Город</th>
+                                            <th>Кол-во</th>
+                                        </thead>
+                                        <tbody>
+                                            {info.response.stats[0].cities.map((data, index)=>{
+                                            return <tr>
+                                                <td>
+                                                {city.map(i=>{
+                                                    if(i.id===data.city_id){
+                                                        return <>{i.title}</>
+                                                    }
+                                                })}</td>
+                                                <td>{data.views}</td>
+                                            </tr>
+                                            })}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                    </div>
+                                    </>
+                                default: return<></>
                                 }
-                            })}
-                             <td>{data.views}</td>
-                        </tr>
-                        })}
-                    </tbody>
-                </table>
-                <table className='table'>
-                    <thead>
-                        <th>Город</th>
-                        <th>Кол-во</th>
-                    </thead>
-                    <tbody>
-                        {info.response.stats[0].cities.map((data, index)=>{
-                        return <tr>
-                            <td>
-                            {city.map(i=>{
-                                if(i.id===data.city_id){
-                                    return <>{i.title}</>
-                                }
-                            })}</td>
-                            <td>{data.views}</td>
-                        </tr>
-                        })}
-                    </tbody>
-                </table>
-                </>
-                :<>Данные о статистике отсутсвуют</>}
-            </div></>}</>
+                                })()}</>}
+                
+           </>}</>
         default: return<></>
         }
         })()}

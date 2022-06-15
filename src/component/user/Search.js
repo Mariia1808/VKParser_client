@@ -283,7 +283,6 @@ const UserSearchPage = () =>{
                 <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
                 <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
-            <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedFields} onChange={setSelectedFields} options={fields} isMulti closeMenuOnSelect={false} />
@@ -317,7 +316,6 @@ const UserSearchPage = () =>{
                 <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
                 <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
-            <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedFields} onChange={setSelectedFields} options={fields} isMulti closeMenuOnSelect={false} />
@@ -352,7 +350,6 @@ const UserSearchPage = () =>{
                 <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
                 <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
-            <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} /> 
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedFields} onChange={setSelectedFields} options={fields} isMulti closeMenuOnSelect={false} />
@@ -382,11 +379,11 @@ const UserSearchPage = () =>{
                     </div>
                     <div>
                         <CsvLink data={info.response.items} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                     </div>
                 </div>
                 <Collapse in={open}>

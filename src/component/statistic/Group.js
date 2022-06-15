@@ -69,12 +69,14 @@ const StatisticGroupPage = () =>{
             case true:
                 return <>{info.response===undefined?
                     <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
-                        :<><div>
+                        :<>{info.response[0].reach.reach===0?
+                            <div className='content con'><h4>Данных недостаточно для формирования статиcтики</h4></div>
+                            :  <><div>
                 <div className='content con'>
                     <h3 className='h'>Активность</h3>
                     <div className='dia'>
-                        <VictoryPie data={[{ x: "Лайки: " + info.response[0].activity.likes, y: info.response[0].activity.likes},{ x: "Репосты: " + (info.response[0].activity.copies===undefined? 0 : info.response[0].activity.copies), y: info.response[0].activity.copies},{ x: "Комментарии: "+info.response[0].activity.comments, y: info.response[0].activity.comments }]} radius={80} colorScale={['#1976d2','#2684ff96','#0b3c6de8']}/>
-                        <VictoryPie data={[{ x: "Подписки: "+info.response[0].activity.subscribed, y: info.response[0].activity.subscribed },{ x: "Отписки: "+info.response[0].activity.unsubscribed, y: info.response[0].activity.unsubscribed }]} radius={80} colorScale={['#1976d2','#2684ff96']}/>
+                        <VictoryPie data={[{ x: (info.response[0].activity.likes===undefined? `` : `Лайки: ` +info.response[0].activity.likes), y: info.response[0].activity.likes},{ x:  (info.response[0].activity.copies===undefined? `` : `Репосты: ` +info.response[0].activity.copies), y: info.response[0].activity.copies},{ x: (info.response[0].activity.comments===undefined? `` : `Комментарии: ` +info.response[0].activity.comments), y: info.response[0].activity.comments }]} radius={80} colorScale={['#1976d2','#2684ff96','#0b3c6de8']}/>
+                        <VictoryPie data={[{ x: (info.response[0].activity.subscribed===undefined? `` : `Подписки: ` +info.response[0].activity.subscribed), y: info.response[0].activity.subscribed },{ x: (info.response[0].activity.unsubscribed===undefined? `` : `Отписки: ` +info.response[0].activity.unsubscribed), y: info.response[0].activity.unsubscribed }]} radius={80} colorScale={['#1976d2','#2684ff96']}/>
                     </div>
                 </div>
                 <div className='stat'>
@@ -134,7 +136,14 @@ const StatisticGroupPage = () =>{
                             <tbody>
                                 {info.response[0].visitors.sex_age.map(data=>{
                                     return <tr>
-                                        <td>{data.value}</td>
+                                        <td>{(() => {
+                                                switch (String(data.value)[0]) {
+                                                case 'f': return <>жен {String(data.value).slice(2)}</>
+                                                case 'm': return <>муж {String(data.value).slice(2)}</>
+                                                default: return <>-</>
+                                                }
+                                            })()}
+                                        </td>
                                         <td>{data.count}</td>
                                         </tr>
                                 })}
@@ -198,7 +207,14 @@ const StatisticGroupPage = () =>{
                             <tbody>
                                 {info.response[0].reach.sex_age.map(data=>{
                                     return <tr>
-                                        <td>{data.value}</td>
+                                        <td>{(() => {
+                                                switch (String(data.value)[0]) {
+                                                case 'f': return <>жен {String(data.value).slice(2)}</>
+                                                case 'm': return <>муж {String(data.value).slice(2)}</>
+                                                default: return <>-</>
+                                                }
+                                            })()}
+                                        </td>
                                         <td>{data.count}</td>
                                         </tr>
                                 })}
@@ -207,7 +223,7 @@ const StatisticGroupPage = () =>{
                     </div>
                     </div>
                 </div>
-            </div></>}</>
+            </div></>}</>}</>
          default: return<></>
     }
     })()}

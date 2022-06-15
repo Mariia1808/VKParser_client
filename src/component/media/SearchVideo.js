@@ -52,6 +52,7 @@ const MediaSearchVideoPage = () =>{
     }
 
   return (
+<>
     <div className='content con'>
         <h3 className='h'>Поиск видео</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
@@ -69,8 +70,93 @@ const MediaSearchVideoPage = () =>{
                 Продолжить
             </LoadingButton>
         </div>
-        
     </div>
+     {(() => {
+        switch (info!=null) {
+            case true:
+                return <>{info.response===undefined?
+                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                        :<><div className='content w'>
+                <div className='shapka'>
+                    <div>
+                        <label>Найденно видеозаписей: </label><label className='war'>{info.response.count}</label>
+                    </div>
+                    <div>
+                        <CsvLink title='Экспорт' data={info.response.items} fileName={NameZapros} >
+                            <IconButton color="primary" variant="outlined">
+                                <SaveAltIcon/>
+                            </IconButton>
+                        </CsvLink>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                    </div>
+                </div>
+                <Collapse in={open}>
+                <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>}sx={{ mb: 2 }}>
+                        Запрос успешно сохранен
+                </Alert>
+                </Collapse>
+                <table className='table'>
+                <thead>
+                    <th>№</th>
+                    <th>id</th>
+                    <th>Название</th>
+                    <th>ID владельца</th>
+                    <th>Тип</th>
+                    <th>Категории</th>
+                    <th>Лайки</th>
+                    <th>Репосты</th>
+                    <th>Просмотры</th>
+                    <th>Обложка</th>
+                </thead>
+                <tbody>
+                {info.response.items.map((data, index)=>{
+                    return <tr>
+                        <td>{index+1}</td>
+                        <td>{data.id}</td>
+                        <td>
+                            {(() => {
+                                switch (data.subtitle!==undefined) {
+                                case true: return <>{data.subtitle}</>
+                                case false: return <>Видео доступно только в ВК</>
+                                default: return <>-</>
+                                }
+                            })()}
+                        </td>
+                        <td>{data.owner_id}</td>
+                        <td>   
+                            {(() => {
+                                switch (data.type) {
+                                case 'video': return <>Видео</>
+                                case 'music_video': return <>Клип</>
+                                case 'movie': return <>Фильм</>
+                                default: return <>-</>
+                                }
+                            })()}
+                        </td>
+                        <td>{(() => {
+                                switch (data.genres!==undefined) {
+                                case true: return <>{data.genres.map(data=> {return <>{data.name}<br/></>})}</>
+                                default: return <>-</>
+                                }
+                            })()}
+                        </td>
+                        <td>{data.likes.count}</td>
+                        <td>{data.reposts.count}</td>
+                        <td>{data.views}</td>
+                        <td><img src={data.image[0].url}/></td>
+                    </tr>
+                })}
+                    </tbody>
+                </table>
+            </div>
+            </>}</>
+            default:
+                return <></>
+            }
+        })()} 
+    </>
   );
 }
 

@@ -19,6 +19,10 @@ import Logotip from "../logo.png";
 const Header = () =>{
 
     const toNavigate = useNavigate()
+    const out = () =>{
+        localStorage.clear()
+        toNavigate('/auth')
+    }
 
   return (
     <div className='header_content'>
@@ -75,7 +79,7 @@ const Header = () =>{
         <div>
             <Menu menuButton={<IconButton className='menu_but  button' color="primary"><FaceOutlinedIcon  variant="outlined"/></IconButton>}>
                 <MenuItem onClick={()=>toNavigate('/history')}>История</MenuItem>
-                <MenuItem>Выход</MenuItem>
+                <MenuItem onClick={()=> out()}>Выход</MenuItem>
             </Menu>
         </div>
     </div>

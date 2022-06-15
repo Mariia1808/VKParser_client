@@ -29,7 +29,7 @@ const GroupsSubscriptionPage = () =>{
     {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
     {value: 'common_count,connections,contacts,crop_photo,domain,exports,quotes,has_photo,has_mobile,,photo_100,status,is_favorite,occupation,online,photo_id', label:'Прочее'}]
 
-    let type = [{value:'', label:'Всех'},{value: 'friends' , label:'Друзья'},{value:'unsure', label:'Возможно пойду'},{value:'donut', label:'VK Donut'},]
+    let type = [{value:'null', label:'Всех'},{value: 'friends' , label:'Друзья'},{value:'unsure', label:'Возможно пойду'},{value:'donut', label:'VK Donut'},]
 
     const [name, setName] = useState(null)
     const [NameZapros, setNameZapros] = useState(null)
@@ -94,18 +94,18 @@ const GroupsSubscriptionPage = () =>{
     {(() => {
         switch (info!=null) {
             case true:
-                return <div className='content con w'>
+                return <div className='content con p'>
                 <div className='shapka'>
                     <div>
                         <label>Число пользователей: </label><label className='war'>{info.length}</label>
                     </div>
                     <div>
                         <CsvLink data={info} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                         
                     </div>
                 </div>
@@ -136,7 +136,7 @@ const GroupsSubscriptionPage = () =>{
                     return <tr>
                         <td>{index+1}</td>
                         <td>{data.id}</td>
-                        <td><>{data.screen_name}</></td>
+                        <td>{data.screen_name}</td>
                         <td>{data.first_name}</td>
                         <td>{data.last_name}</td>
                         <td>{(() => {

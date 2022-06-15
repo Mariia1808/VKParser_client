@@ -69,16 +69,16 @@ const MediaInfoPhotoPage = () =>{
                 <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
                     :<><div className='content con'>
                 <div className='shapka'>
-                    <div>
+                    <div> 
                         <label>Получено фотографий <label className='war'>{photo.response.length}</label>  </label>
                     </div>
                     <div>
                         <CsvLink data={photo.response} fileName={NameZapros} >
-                            <IconButton color="primary" variant="outlined">
+                            <IconButton title='Экспорт' color="primary" variant="outlined">
                                 <SaveAltIcon/>
                             </IconButton>
                         </CsvLink>
-                        <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                        <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                     </div>
                 </div>
                 <Collapse in={open}>
@@ -92,6 +92,8 @@ const MediaInfoPhotoPage = () =>{
                 <thead>
                     <th>№</th>
                     <th>ID</th>
+                    <th>ID альбома</th>
+                    <th>Фото</th>
                     <th>Текст</th>
                     <th>Теги</th>
                     <th>Лайки</th>
@@ -103,6 +105,8 @@ const MediaInfoPhotoPage = () =>{
                     return <tr>
                         <td>{index+1}</td>
                         <td>{data.id}</td>
+                        <td>{data.album_id}</td>
+                        <td><img src={data.sizes[0].url}/></td>
                         <td>{data.text}</td>
                         <td>{data.tags.count}</td>
                         <td>{data.likes.count}</td>

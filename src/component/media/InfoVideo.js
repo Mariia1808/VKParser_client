@@ -110,14 +110,21 @@ const MediaInfoVideoPage = () =>{
                 </div>
                 <div>
                     <CsvLink data={info.response.items} fileName={NameZapros} >
-                        <IconButton color="primary" variant="outlined">
+                        <IconButton title='Экспорт' color="primary" variant="outlined">
                             <SaveAltIcon/>
                         </IconButton>
                     </CsvLink>
-                    <IconButton color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
+                    <IconButton title='Сохранить' color="primary" variant="outlined" onClick={()=>Save()}><SaveAsIcon/></IconButton>
                     
                 </div>
             </div>
+            <Collapse in={open}>
+                <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>}sx={{ mb: 2 }}>
+                        Запрос успешно сохранен
+                </Alert>
+            </Collapse>
             <table className='table'>
             <thead>
                 <th>№</th>

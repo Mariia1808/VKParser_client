@@ -14,7 +14,7 @@ const OtherSholdLinkPage = () =>{
     },[])
 
   return (
-    <div className='content w'>
+    <div className='content con w'>
         <h3 className='h'>Сокращенные ссылки</h3>
         {(() => {
         switch (link!=null) {

@@ -84,7 +84,7 @@ const OtherUniversitiesPage = () =>{
             case true:
                 return <>{universite.response===undefined?
                     <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
-                        :<><div className='content con w'>
+                        :<><div className='content con'>
                     <label>Найдено <label className='war'>{universite.response.count}</label> университетов </label>
                 <table className='table'>
                     <thead>

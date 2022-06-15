@@ -39,7 +39,7 @@ const OtherRegionsPage = () =>{
     
 
   return (
-    <><div className='content w'>
+    <><div className='content con'>
         <h3 className='h'>Регионы</h3>
         <Select className='select' placeholder='Выберите страну' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
@@ -54,7 +54,7 @@ const OtherRegionsPage = () =>{
             switch (region!=null) {
             case true:
                 return <>{region.response===undefined?
-                    <div className='content con'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
+                    <div className='content con w'><h4>Ничего не найдено, проверьте правильность введенных данных</h4></div>
                         :<><div className='content con w'>
                     <label>Найдено <label className='war'>{region.response.count}</label> региона </label>
                 <table className='table'>
