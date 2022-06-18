@@ -24,141 +24,141 @@ export const publicRoutes = [
         Component:HistoryPage
     },
     {
-        path:USER_GET_INFO,
+        path:USER_GET_INFO+'/:params',
         Component:UserPage
     },
     {
-        path:USER_GET_FOLLOWERS,
+        path:USER_GET_FOLLOWERS+'/:params',
         Component:UserPage
     },
     {
-        path:USER_GET_SUBSCRIPTIONS,
+        path:USER_GET_SUBSCRIPTIONS+'/:params',
         Component:UserPage
     },
     {
-        path:USER_SEARCH,
+        path:USER_SEARCH+'/:params',
         Component:UserPage
     },
     {
-        path:COMMENTS_ABOUT_POST,
+        path:COMMENTS_ABOUT_POST+'/:params',
         Component:CommentPage
     },
     {
-        path:COMMENTS_ABOUT_PHOTO,
+        path:COMMENTS_ABOUT_PHOTO+'/:params',
         Component:CommentPage
     },
     {
-        path:COMMENTS_ABOUT_VIDEO,
+        path:COMMENTS_ABOUT_VIDEO+'/:params',
         Component:CommentPage
     },
     {
-        path:GROUPS_GET_SUBSCRIPTIONS,
+        path:GROUPS_GET_SUBSCRIPTIONS+'/:params',
         Component:GroupsPage
     },
     {
-        path:GROUPS_GET_FOLLOWERS,
+        path:GROUPS_GET_FOLLOWERS+'/:params',
         Component:GroupsPage
     },
     {
-        path:GROUPS_GET_INFO,
+        path:GROUPS_GET_INFO+'/:params',
         Component:GroupsPage
     },
     {
-        path:GROUPS_SEARCH,
+        path:GROUPS_SEARCH+'/:params',
         Component:GroupsPage
     },
     {
-        path:GROUPS_SEARCH_EVENT,
+        path:GROUPS_SEARCH_EVENT+'/:params',
         Component:GroupsPage
     },
 
     {
-        path:GROUPS_GET_CATALOGS,
+        path:GROUPS_GET_CATALOGS+'/:params',
         Component:GroupsPage
     },
     {
-        path:GROUPS_GET_CATEGORIES,
+        path:GROUPS_GET_CATEGORIES+'/:params',
         Component:GroupsPage
     },
     {
-        path:MEDIA_GET_INFO_PHOTO,
+        path:MEDIA_GET_INFO_PHOTO+'/:params',
         Component:MediaPage
     },
     {
-        path:MEDIA_GET_INFO_VIDEO,
+        path:MEDIA_GET_INFO_VIDEO+'/:params',
         Component:MediaPage
     },
     {
-        path:MEDIA_GET_INFO_ALBOM_VIDEO,
+        path:MEDIA_GET_INFO_ALBOM_VIDEO+'/:params',
         Component:MediaPage
     },
     {
-        path:MEDIA_SEARCH_VIDEO,
+        path:MEDIA_SEARCH_VIDEO+'/:params',
         Component:MediaPage
     },
     {
-        path:MEDIA_SEARCH_PHOTO,
+        path:MEDIA_SEARCH_PHOTO+'/:params',
         Component:MediaPage
     },
     {
-        path:WALL_GET_INFO,
+        path:WALL_GET_INFO+'/:params',
         Component:WallPage
     },
     {
-        path:WALL_GET_LIKES,
+        path:WALL_GET_LIKES+'/:params',
         Component:WallPage
     },
     {
-        path:WALL_GET_REPOST,
+        path:WALL_GET_REPOST+'/:params',
         Component:WallPage
     },
     {
-        path:WALL_SEARCH,
+        path:WALL_SEARCH+'/:params',
         Component:WallPage
     },
     {
-        path:STATISTIC_GET_LINK,
+        path:STATISTIC_GET_LINK+'/:params',
         Component:StatisticPage
     },
     {
-        path:STATISTIC_APPLICATION,
+        path:STATISTIC_APPLICATION+'/:params',
         Component:StatisticPage
     },
     {
-        path:STATISTIC_GROUP,
+        path:STATISTIC_GROUP+'/:params',
         Component:StatisticPage
     },
     {
-        path:STATISTIC_POST,
+        path:STATISTIC_POST+'/:params',
         Component:StatisticPage
     },
     {
-        path:OTHER_GET_COUNTRY,
+        path:OTHER_GET_COUNTRY+'/:params',
         Component:OtherPage
     },
     {
-        path:OTHER_GET_REGIONS,
+        path:OTHER_GET_REGIONS+'/:params',
         Component:OtherPage
     },
     {
-        path:OTHER_GET_CITY,
+        path:OTHER_GET_CITY+'/:params',
         Component:OtherPage
     },
     {
-        path:OTHER_GET_UNIVERSITES,
+        path:OTHER_GET_UNIVERSITES+'/:params',
         Component:OtherPage
     },
     {
-        path:OTHER_GET_FACULTIES,
+        path:OTHER_GET_FACULTIES+'/:params',
         Component:OtherPage
     },
     {
-        path:OTHER_GET_IDENTIFIKATOR,
-        Component:OtherPage
+        path:OTHER_GET_IDENTIFIKATOR+'/:params',
+        Component:OtherPage,
     },
 
     {
-        path:OTHER_GET_SHOLD_LINK,
+        path:OTHER_GET_SHOLD_LINK+'/:params',
         Component:OtherPage
     },
 ]

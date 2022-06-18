@@ -19,12 +19,12 @@ const StatisticPage = () =>{
     <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
+                switch (String(location.pathname).slice(0,19)) {
                 case '/statistic/get_post':
                     return <StatisticPostPage/>
-                case '/statistic/get_application':
+                case '/statistic/get_appl':
                     return <StatisticApplicationPage/>
-                case '/statistic/get_group':
+                case '/statistic/get_grou':
                     return <StatisticGroupPage/>
                 case '/statistic/get_link':
                     return <StatisticLinkPage/>

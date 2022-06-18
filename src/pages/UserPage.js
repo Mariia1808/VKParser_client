@@ -20,12 +20,12 @@ const UserPage = () =>{
             {console.log(location.pathname)}
             
             {(() => {
-                    switch (location.pathname) {
-                    case '/user/get_subscriptions':
+                    switch (String(location.pathname).slice(0,12)) {
+                    case '/user/get_su':
                         return <UserSubscriptionPage/>
-                    case '/user/get_info':
+                    case '/user/get_in':
                         return <UserInfoPage/>
-                    case '/user/get_followers':
+                    case '/user/get_fo':
                         return <UserFollowersPage/>
                     case '/user/search':
                         return <UserSearchPage/>

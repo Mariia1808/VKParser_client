@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import queryString from "query-string";
 import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
@@ -26,7 +26,10 @@ const UserInfoPage = () =>{
     let decodedData = jwt_decode(storedToken);
     const location = useLocation()
 
-    const [selectedOption, setSelectedOption] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].fields)
 
     let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
     {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
@@ -34,8 +37,8 @@ const UserInfoPage = () =>{
     {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
     {value: 'common_count,connections,contacts,crop_photo,domain,exports,quotes,has_photo,has_mobile,,photo_100,status,is_favorite,occupation,online,photo_id', label:'Прочее'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
     
@@ -65,7 +68,10 @@ const UserInfoPage = () =>{
     }
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
+        console.log(parameters)
+        console.log(JSON.parse(parameters))
+        const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id), parameters, 3)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -76,7 +82,7 @@ const UserInfoPage = () =>{
     <div className='content con'>
         <h3 className='h'>Расширенная информация о пользователе(-ях)</h3>
         <div >
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -84,7 +90,7 @@ const UserInfoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
            
         <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
         <div className='div1'>

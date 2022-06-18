@@ -17,12 +17,12 @@ const WallPage = () =>{
     <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
-                case '/wall/get_info':
+                switch (String(location.pathname).slice(0,12)) {
+                case '/wall/get_in':
                     return <WallInfoPage/>
                 case '/wall/search':
                     return <WallSearchPage/>
-                case '/wall/get_repost':
+                case '/wall/get_re':
                     return <WallRepostPage/>
                 default:
                     return <></>

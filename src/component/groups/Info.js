@@ -55,7 +55,7 @@ const GroupsInfoPage = () =>{
   return (
     <>
     <div className='content con'>
-        <h3 className='h'>Расширенная информация о сообществе</h3>
+        <h3 className='h'>Расширенная информация о сообществе(-ах)</h3>
         <div >
             <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>

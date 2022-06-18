@@ -9,12 +9,14 @@ import { IconButton } from '@mui/material';
 import CsvLink from 'react-csv-export';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
+import { useNavigate } from 'react-router-dom';
+import RestoreIcon from '@mui/icons-material/Restore';
 
 const HistoryPage = () =>{
     
     
     let decodedData = null
-
+    const toNavigate = useNavigate()
     const [history, setHistory] = useState(null)
 
     useEffect(() =>{
@@ -28,9 +30,18 @@ const HistoryPage = () =>{
 
     const[T, setT]=useState(false)
     const Delete = async (id) =>{
-        delete_history(id)
+        const storedToken = localStorage.getItem("token");
+        decodedData = jwt_decode(storedToken);
+        await delete_history(id)
         get(decodedData.user_id).then(data => setHistory(data))
         setT(true)
+    }
+
+    const Return = (url, params) =>{
+        console.log(url)
+        console.log(JSON.parse(params))
+        const par = JSON.stringify(params)
+        toNavigate(url+'/'+ encodeURI(par))
     }
 
     return (
@@ -43,25 +54,30 @@ const HistoryPage = () =>{
                 <>Вы еще ничего не сохранили</>
                 :
                 <>
-                <label>Найдено <label className='war'>{history.count}</label> сохраненных запросов</label>
+                <label>Найдено <label className='war'>{history[0]}</label> сохраненных запросов</label>
                 <table className='table'>
                     <thead>
                         <th>№</th>
                         <th>Дата</th>
-                        <th colSpan={2}>Название</th>
+                        <th>Название</th>
+                        <th colSpan={2}>Метод</th>
                     </thead>
                     <tbody>
-                        {history.rows.map((data, index)=>{
+                        {history[1].map((data, index)=>{
                         return <tr>
                             <td>{index+1}</td>
                             <td>{String(data.createdAt).slice(0,10)}</td>
                             <td>{data.zapros}</td>
+                            <td>{history[2][index].name}</td>
                             <td>
                                 <CsvLink data={data.itog} fileName={data.zapros} >
                                     <IconButton title='Экспорт' color="primary" variant="outlined">
                                         <SaveAltIcon/>
                                     </IconButton>
                                 </CsvLink>
+                                <IconButton color="primary" title='Повторить запрос' variant="outlined" onClick={()=>Return(history[2][index].method, history[3][index].parameters)}>
+                                    <RestoreIcon/>
+                                </IconButton>
                                 <IconButton color="primary" title='Удалить' variant="outlined" onClick={()=>Delete(data.id)}>
                                     <DeleteForever/>
                                 </IconButton>

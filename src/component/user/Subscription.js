@@ -66,7 +66,8 @@ const UserSubscriptionPage = () =>{
     }
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 2)
         if(data.response==='no_error'){
             setOpen(true)
         }

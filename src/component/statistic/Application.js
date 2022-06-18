@@ -23,7 +23,7 @@ const StatisticApplicationPage = () =>{
   return (
 <>
     <div className='content con'>
-        <h3 className='h'>Статистика приложения</h3>
+        <h3 className='h'>Статистика приложения за весь период</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор приложения" />
         <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 

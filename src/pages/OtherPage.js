@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import OtherCountryPage from '../component/other/Country';
 import OtherRegionsPage from '../component/other/Regions';
 import OtherCityPage from '../component/other/City';
@@ -14,27 +14,32 @@ import LoginIcon from '@mui/icons-material/Login';
 const OtherPage = () =>{
 
     const location = useLocation()
-    
+    const {params} = useParams()
+
+    useEffect(() =>{
+        console.log(params)
+        console.log(localStorage)
+        console.log(String(location.pathname).slice(0,15))
+    },[])
 
   return ( 
 <>{localStorage.length!==0?
     <div className="content_wall">
-        {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
-                case '/other/get_country':
+                switch (String(location.pathname).slice(0,15)) {
+                case '/other/get_coun':
                     return <OtherCountryPage/>
-                case '/other/get_regions':
+                case '/other/get_regi':
                     return <OtherRegionsPage/>
                 case '/other/get_city':
                     return <OtherCityPage/>
-                case '/other/get_universities':
+                case '/other/get_univ':
                     return <OtherUniversitiesPage/>
-                case '/other/get_faculties':
+                case '/other/get_facu':
                     return <OtherFacultiesPage/>
-                case '/other/get_identifikator':
+                case '/other/get_iden':
                     return <OtherIdentifikatorPage/>
-                case '/other/get_shold_link':
+                case '/other/get_shol':
                     return <OtherSholdLinkPage/>
                 default:
                     return <></>

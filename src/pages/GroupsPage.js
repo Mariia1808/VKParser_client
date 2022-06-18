@@ -19,20 +19,20 @@ const GroupsPage = () =>{
     <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
-                case '/groups/get_subscriptions':
+                switch (String(location.pathname).slice(0,14)) {
+                case '/groups/get_su':
                     return <GroupsSubscriptionPage/>
-                case '/groups/get_followers':
+                case '/groups/get_fo':
                     return <GroupsFollowersPage/>
-                case '/groups/get_info':
+                case '/groups/get_in':
                     return <GroupsInfoPage/>
                 case '/groups/search':
                     return <GroupsSearchPage/>
-                case '/groups/search_event':
+                case '/groups/search':
                     return <EventSearchPage/>
-                case '/groups/get_catalogs':
+                case '/groups/get_ca':
                     return <GroupsCatalogsPage/>
-                case '/groups/get_categories':
+                case '/groups/get_ca':
                     return <GroupsCategoriesPage/>
                 default:
                     return <></>

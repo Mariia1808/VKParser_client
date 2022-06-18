@@ -19,16 +19,16 @@ const MediaPage = () =>{
     <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
-                case '/media/get_info_photo':
+                switch (String(location.pathname).slice(0,19)) {
+                case '/media/get_info_pho':
                     return <MediaInfoPhotoPage/>
                 case '/media/search_photo':
                     return <MediaSearchPhotoPage/>
-                case '/media/get_info_video':
+                case '/media/get_info_vid':
                     return <MediaInfoVideoPage/>
                 case '/media/search_video':
                     return <MediaSearchVideoPage/>
-                case '/media/get_info_albom_video':
+                case '/media/get_info_alb':
                     return <MediaInfoAlbomVideoPage/>
                 default:
                     return <></>

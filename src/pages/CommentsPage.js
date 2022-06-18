@@ -17,12 +17,12 @@ const CommentPage = () =>{
     <div className="content_wall">
         {console.log(location.pathname)}
         {(() => {
-                switch (location.pathname) {
+                switch (String(location.pathname).slice(0,20)) {
                 case '/comments/about_post':
                     return <CommentAboutPostPage/>
-                case '/comments/about_photo':
+                case '/comments/about_phot':
                     return <CommentAboutPhotoPage/>
-                case '/comments/about_video':
+                case '/comments/about_vide':
                     return <CommentAboutVideoPage/>
                 default:
                     return <></>

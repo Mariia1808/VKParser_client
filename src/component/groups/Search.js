@@ -62,7 +62,7 @@ const GroupsSearchPage = () =>{
   return (
 <>
     <div className='content con'>
-        <h3 className='h'>Поиск сообщества</h3>
+        <h3 className='h'>Поиск сообществ</h3>
         <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
