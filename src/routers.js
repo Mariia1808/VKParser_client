@@ -12,7 +12,7 @@ import { AUTH_ROUTE, COMMENTS_ABOUT_PHOTO, COMMENTS_ABOUT_VIDEO, COMMENTS_ABOUT_
 
 export const publicRoutes = [
     {
-        path:MAIN_ROUTE,
+        path:MAIN_ROUTE+'?:code',
         Component: MainPage
     },
     {

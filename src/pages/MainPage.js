@@ -17,7 +17,7 @@ const MainPage = () =>{
 
     useEffect(() =>{
         
-        let code = (queryString.parse(window.location.href)['http://localhost:3000/main?code'])
+        let code = (queryString.parse(window.location.href)['https://parservkontakte.netlify.app/main?code'])
         if(code!==undefined){
             login(code).then(data => setIsxod(data)).finally(()=> log())
         }
