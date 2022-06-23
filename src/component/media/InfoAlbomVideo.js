@@ -15,14 +15,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const MediaInfoAlbomVideoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
-    const [NameZapros, setNameZapros] = useState(null)
+
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [Albom, setAlbom] = useState(null)
-    const [ID, setID] = useState(null)
+    const [ID, setID] = useState(def===null?'':def[1].param)
     const [info, setInfo] = useState(null)
 
     const [loading, setLoading]=useState(false)
@@ -47,7 +52,8 @@ const MediaInfoAlbomVideoPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param': ID}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 18)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -61,7 +67,7 @@ const MediaInfoAlbomVideoPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Информация об альбоме с видео</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -69,7 +75,7 @@ const MediaInfoAlbomVideoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setID(e.target.value)} label="Введите короткое имя пользователя или сообщаства" />
+            <TextField className='text' id="filled-basic" defaultValue={ID} onChange={e=>setID(e.target.value)} label="Введите короткое имя пользователя или сообщаства" />
             <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить

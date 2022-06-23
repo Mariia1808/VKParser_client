@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import { useNavigate } from 'react-router-dom';
 import RestoreIcon from '@mui/icons-material/Restore';
+import Skeleton from '@mui/material/Skeleton';
 
 const HistoryPage = () =>{
     
@@ -18,12 +19,13 @@ const HistoryPage = () =>{
     let decodedData = null
     const toNavigate = useNavigate()
     const [history, setHistory] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() =>{
         if(localStorage.length!==0){
             const storedToken = localStorage.getItem("token");
             decodedData = jwt_decode(storedToken);
-            get(decodedData.user_id).then(data => setHistory(data))
+            get(decodedData.user_id).then(data => setHistory(data)).finally(()=>setLoading(false))
         }
        
     },[])
@@ -47,6 +49,16 @@ const HistoryPage = () =>{
     return (
 <>{localStorage.length!==0?
     <div className="content content_wall pad">
+        {(() => {
+            switch (loading) {
+                case true:
+                    return <Skeleton variant="rectangular" width={500} height={300} >
+                        Идет загрузка...
+                    </Skeleton>
+                case false: return<></>
+                default: return<></>
+            }
+            })()}
        {(() => {
         switch (history!=null) {
             case true:
@@ -95,7 +107,7 @@ const HistoryPage = () =>{
     :
     <div className="content content_wall c">
         <label>Перед началом работы необходимо авторизоваться.</label><br/>
-        <Button className='button' variant="outlined" endIcon={<LoginIcon />}><a href='https://oauth.vk.com/authorize?client_id=8143523&revoke=1&redirect_uri=http://localhost:3000/main&display=page&scope=friends,offline,photos,audio,video,wall,groups,email,stats,ads,market&response_type=code'>Вход</a></Button>
+        <Button className='button' variant="outlined" endIcon={<LoginIcon />}><a href='https://oauth.vk.com/authorize?client_id=8143523&revoke=1&redirect_uri=https://parservkontakte.netlify.app/main&display=page&scope=friends,offline,photos,audio,video,wall,groups,email,stats,ads,market&response_type=code'>Вход</a></Button>
         <br/><label><label className='war'>ВАЖНО:</label> необходимо передоставить права ко всем пунктам, в том числе к email.
         Даже если ваш текущий email другой, он необходим для создания личного кабинета.</label>
     </div>

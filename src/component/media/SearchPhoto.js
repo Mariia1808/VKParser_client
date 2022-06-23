@@ -15,17 +15,22 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const MediaSearchPhotoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
-    const [NameZapros, setNameZapros] = useState(null)
-    const [name, setName] = useState(null)
+
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+    
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
+    const [name, setName] = useState(def===null?'':def[1].param)
     const [Dates, setDate] = useState(null)
     const [info, setInfo] = useState(null)
-    const [selectedOptionSort, setSelectedOptionSort] = useState(null)
-    const [selectedOptionRadius, setSelectedOptionRadius] = useState(null)
+    const [selectedOptionSort, setSelectedOptionSort] = useState(def===null?'':def[2].sort)
+    const [selectedOptionRadius, setSelectedOptionRadius] = useState(def===null?'':def[3].radius)
     let sort = [{value: '1', label:'по количеству отметок «Мне нравится»'},{value: '0' , label:'по дате добавления фотографии'}]
     let radius = [{value: '10', label:'10 метров'},{value: '100' , label:'100 метров'},{value:'800', label:'800 метров'},{value:'6000', label:'6000 метров'},{value:'50000', label:'50000 метров'}]
 
@@ -46,7 +51,8 @@ const MediaSearchPhotoPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'sort':selectedOptionSort}, {'radius':selectedOptionRadius}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 15)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -56,7 +62,7 @@ const MediaSearchPhotoPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Поиск фото</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -64,7 +70,7 @@ const MediaSearchPhotoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите поисковый запрос" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите поисковый запрос" />
         {/* <TextField id="date" label="Вернуть фото добавленые не ранее" sx={{ width: 220 }} onChange={e=>setDate(e.target.value)} type="date" InputLabelProps={{shrink: true,}}/> */}
         <Select className='select' placeholder='Сортировать' defaultValue={selectedOptionSort} onChange={setSelectedOptionSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Поиск фото в радиусе' defaultValue={selectedOptionRadius} onChange={setSelectedOptionRadius} options={radius} closeMenuOnSelect={false} />

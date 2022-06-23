@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import queryString from "query-string";
 import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
@@ -25,16 +25,19 @@ const UserFollowersPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
     const location = useLocation()
+
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
     
-    const [selectedOption, setSelectedOption] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].fields)
     let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
     {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
     {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
     {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
     {value: 'common_count,connections,contacts,crop_photo,domain,exports,quotes,has_photo,has_mobile,,photo_100,status,is_favorite,occupation,online,photo_id', label:'Прочее'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [open_error, setOpen_error] = useState(false)
 
@@ -52,7 +55,8 @@ const UserFollowersPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 1)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -63,7 +67,7 @@ const UserFollowersPage = () =>{
     <div className='content con'>
         <h3 className='h'>Подписчики пользователя</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
                 <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                     <CloseIcon fontSize="inherit" />
@@ -71,7 +75,7 @@ const UserFollowersPage = () =>{
                     Вы не ввели название запроса
                 </Alert>
             </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+            <TextField className='text' defaultValue={name} id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
              <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
              <div className='div1'>
              <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 

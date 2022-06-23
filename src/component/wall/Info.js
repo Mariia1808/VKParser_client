@@ -15,20 +15,24 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const WallInfoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
     let data = [{value: 'owner', label:'От владельца'},{value: 'others' , label:'От других'},{value:'all', label:'Все записи'}]
 
-    const [name, setName] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
     const [main, setMain] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
-    const [selectedOption, setSelectedOption] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].fields)
     const [error, setError] = useState(null)
     const [loading, setLoading]=useState(false)
     const [open_error, setOpen_error] = useState(false);
@@ -74,14 +78,16 @@ const WallInfoPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
+        const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id), parameters, 19)
         if(data.response==='no_error'){
             setOpen(true)
         }
     }
     const [open1, setOpen1] = useState(false);
     const Save1 = async ()=>{
-        const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
+        const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id), parameters, 19)
         if(data.response==='no_error'){
             setOpen1(true)
         }
@@ -91,7 +97,7 @@ const WallInfoPage = () =>{
 <>
     <div className='content con'>
         <h3>Расширенная информация о записях</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros}  onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -99,7 +105,7 @@ const WallInfoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
         <Select className='select' placeholder='Выберите какие записи необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 

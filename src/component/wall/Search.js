@@ -14,14 +14,18 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 const WallSearchPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
-    const [nameZs, setNameZs] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
+    const [nameZs, setNameZs] = useState(def===null?'':def[2].zapros)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
     const [main, setMain] = useState(null)
@@ -67,14 +71,16 @@ const WallSearchPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async (value)=>{
-        const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'zapros':nameZs}])
+        const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id), parameters, 20)
         if(data.response==='no_error'){
             setOpen(true)
         }
     }
     const [open1, setOpen1] = useState(false);
     const Save1 = async (value)=>{
-        const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'zapros':nameZs}])
+        const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id), parameters, 20)
         if(data.response==='no_error'){
             setOpen1(true)
         }
@@ -84,7 +90,7 @@ const WallSearchPage = () =>{
 <>
     <div className='content con'>
         <h3 className='zag h'>Поиск записи</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -92,8 +98,8 @@ const WallSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZs(e.target.value)} label="Введите запрос" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
+        <TextField className='text' id="filled-basic" defaultValue={nameZs} onChange={e=>setNameZs(e.target.value)} label="Введите запрос" />
         <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить
@@ -150,7 +156,20 @@ const WallSearchPage = () =>{
                                 <td>{index+1}</td>
                                 <td>{data.id}</td>
                                 <td>{data.owner_id}</td>
-                                <td>{data.attachments[0].photo.album_id}</td>
+                                <td>
+                                    {(() => {
+                                    switch (data.attachments!==undefined) {
+                                    case true: return <>{(() => {
+                                        switch (data.attachments[0].photo!==undefined) {
+                                        case true: return <>{data.attachments[0].photo.album_id}</>
+                                        default: return <></>
+                                        }
+                                    })()}
+                                    </>
+                                    default: return <>-</>
+                                    }
+                                })()}
+                               </td>
                                 <td>{data.text}</td>
                                 <td>
                                     {(() => {

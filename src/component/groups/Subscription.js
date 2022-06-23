@@ -16,13 +16,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const GroupsSubscriptionPage = () =>{
+
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
-    const [selectedOption, setSelectedOption] = useState(null)
-    const [selectedOptionT, setSelectedOptionT] = useState(null)
+
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].select)
+    const [selectedOptionT, setSelectedOptionT] = useState(def===null?'':def[3].selectT)
     let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
     {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
     {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
@@ -31,8 +37,8 @@ const GroupsSubscriptionPage = () =>{
 
     let type = [{value:'null', label:'Всех'},{value: 'friends' , label:'Друзья'},{value:'unsure', label:'Возможно пойду'},{value:'donut', label:'VK Donut'},]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
     
@@ -57,23 +63,19 @@ const GroupsSubscriptionPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'select':selectedOption}, {'selectT':selectedOptionT}])
+        const data = await SaveHistory(JSON.stringify(info), NameZapros, parseInt(decodedData.id), parameters, 8)
         if(data.response==='no_error'){
             setOpen(true)
         }
     }
-
-    const Delete =()=>{
-        
-    }
-
 
   return (
 <>
     <div className='content con'>
         <h3 className='h'>Подписчики сообщества</h3>
         <div>
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -81,7 +83,7 @@ const GroupsSubscriptionPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+            <TextField className='text' defaultValue={name} id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOption} onChange={setSelectedOption} options={fields} isMulti closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedOptionT} onChange={setSelectedOptionT} options={type} closeMenuOnSelect={false} />
             <div className='div1'>

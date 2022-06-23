@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import queryString from "query-string";
 import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
@@ -34,7 +34,10 @@ const UserSearchPage = () =>{
       setInfo(null)
     };
 
-    const [selectedFields, setSelectedFields] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [selectedFields, setSelectedFields] = useState(def===null?null:def[21].selectedFields)
     let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
     {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
     {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
@@ -43,27 +46,33 @@ const UserSearchPage = () =>{
 
 
 
-    const [selectedSort, setSelectedSort] = useState(null)
+    const [selectedSort, setSelectedSort] = useState(def===null?null:def[11].selectedSort)
     let sort = [{value:1, label:'по дате регистрации'},{value:0, label:'по популярности'}]
-    const [selectedSex, setSelectedSex] = useState(null)
+    const [selectedSex, setSelectedSex] = useState(def===null?null:def[12].selectedSex)
     let sex = [{value:1, label:'женский'},{value:2, label:'мужской'},{value:0, label:'любой'}]
-    const [selectedStatus, setSelectedStatus] = useState(null)
+    const [selectedStatus, setSelectedStatus] = useState(def===null?null:def[13].selectedStatus)
     let status = [{value:1, label:'не женат (не замужем)'},{value:2, label:'встречается'},{value:3, label:'помолвлен(-а)'},{value:4, label:'женат (замужем)'},{value:5, label:'всё сложно'},{value:6, label:'в активном поиске'},{value:7, label:'влюблен(-а)'},{value:8, label:'в гражданском браке'}]
-    const [selected_from_list, setSelected_from_list] = useState(null)
+    const [selected_from_list, setSelected_from_list] = useState(def===null?null:def[14].selected_from_list)
     let from_list = [{value:'friends ', label:'искать среди друзей'},{value:'subscriptions', label:'искать среди друзей и подписок'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?null:def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?null:def[0].name)
     const [info, setInfo] = useState(null)
-    const [year, setYear] = useState(null)
-    const [group_id, set_group_id] = useState(null)
-    const [company, set_company] = useState(null)
-    const [position, set_position] = useState(null)
-    const [age_from, set_age_from] = useState(null)
-    const [age_to, set_age_to] = useState(null)
-    const [birth_day, set_birth_day] = useState(null)
-    const [birth_month, set_birth_month] = useState(null)
-    const [birth_year, set_birth_year] = useState(null)
+    const [year, setYear] = useState(def===null?null:def[2].year)
+    const [group_id, set_group_id] = useState(def===null?null:def[3].group_id)
+    const [company, set_company] = useState(def===null?null:def[4].company)
+    const [position, set_position] = useState(def===null?null:def[5].position)
+    const [age_from, set_age_from] = useState(def===null?null:def[6].age_from)
+    const [age_to, set_age_to] = useState(def===null?null:def[7].age_to)
+    const [birth_day, set_birth_day] = useState(def===null?null:def[8].birth_day)
+    const [birth_month, set_birth_month] = useState(def===null?null:def[9].birth_month)
+    const [birth_year, set_birth_year] = useState(def===null?null:def[10].birth_year)
+    const [selectedCountry, setSelectedCountry] = useState(def===null?null:def[16].selectedCountry)
+    const [selectedRegion, setSelectedRegion] = useState(def===null?null:def[17].selectedRegion)
+    const [selectedCity, setSelectedCity] = useState(def===null?null:def[15].selectedCity)
+    const [selectedUnivercity, setSelectedUnivercity] = useState(def===null?null:def[18].selectedUnivercity)
+    const [selectedFacults, setSelectedFacults] = useState(def===null?null:def[19].selectedFacults)
+    const [selectedSchool, setSelectedSchool] = useState(def===null?null:def[20].selectedSchool)
     const [error, setError] = useState(null)
     
     const [loading, setLoading]=useState(false)
@@ -135,7 +144,14 @@ const UserSearchPage = () =>{
     const [t, setT] = useState(false)
 
     useEffect(() =>{
-        getCountries(decodedData.token).then(data => setCountry(data.response.items))
+        getCountries(decodedData.token).then(data => setCountry(data.response.items)).finally(()=>selectedCountry===null?null:
+        getRegions(decodedData.token, selectedCountry.value).then(data => setRegions(data.response.items)).finally(()=>selectedRegion===null?null:
+        getCities(decodedData.token, selectedCountry.value, selectedRegion.value).then(data => setCities(data.response.items)).finally(()=>
+            selectedCity===null?null:getSchools(decodedData.token, selectedCity.value).then(data => setSchool(data.response.items)).finally(()=>
+            getUniversities(decodedData.token, selectedCountry.value, selectedCity.value.then(data => setUniversity(data.response.items)).finally(()=>selectedUnivercity===null?null:
+            getFaculties(decodedData.token, selectedCountry.value, selectedCity.value, selectedUnivercity.value).then(data => setFacults(data.response.items))
+            ))))))
+            console.log(selectedCity)
     },[])
   
     let countries = country.map((item) => {
@@ -203,16 +219,16 @@ const UserSearchPage = () =>{
         
     }
 
-    const [selectedCountry, setSelectedCountry] = useState(null)
-    const [selectedRegion, setSelectedRegion] = useState(null)
-    const [selectedCity, setSelectedCity] = useState(null)
-    const [selectedUnivercity, setSelectedUnivercity] = useState(null)
-    const [selectedFacults, setSelectedFacults] = useState(null)
-    const [selectedSchool, setSelectedSchool] = useState(null)
+    
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'year':year}, {'group_id':group_id}, {'company':company}, {'position':position}, 
+        {'age_from':age_from}, {'age_to':age_to}, {'birth_day':birth_day}, {'birth_month':birth_month}, {'birth_year':birth_year},
+        {'selectedSort':selectedSort}, {'selectedSex':selectedSex}, {'selectedStatus':selectedStatus}, {'selected_from_list':selected_from_list}, 
+        {'selectedCity':selectedCity}, {'selectedCountry':selectedCountry}, {'selectedRegion':selectedRegion}, {'selectedUnivercity':selectedUnivercity}, 
+        {'selectedFacults':selectedFacults}, {'selectedSchool':selectedSchool}, {'selectedFields':selectedFields}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 4)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -231,7 +247,7 @@ const UserSearchPage = () =>{
           </TabList>
           {/* общий */}
         <TabPanel value="1">
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -239,19 +255,19 @@ const UserSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
-            <TextField className='text' id="filled-basic" onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
+            <TextField className='text' id="filled-basic" defaultValue={group_id} onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
             <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <div className='bdiv'>
-                <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' defaultValue={age_from} label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' defaultValue={age_to} label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
             <div className='bdiv'>
-                <TextField id="filled-number" className='birth' label="День рож." onChange={(e) => set_birth_day(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number" className='birth' label="Месяц рож." onChange={(e) => set_birth_month(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number" className='birth' label="Год рож." onChange={(e) => set_birth_year(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='birth lo' defaultValue={birth_day} label="День рож." onChange={(e) => set_birth_day(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='birth lo' defaultValue={birth_month} label="Месяц рож." onChange={(e) => set_birth_month(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='birth lo' defaultValue={birth_year} label="Год рож." onChange={(e) => set_birth_year(e.target.value)} type="number" step={1} min={0}/>
             </div>
             <Select className='select' placeholder='Выберите семейное положение' defaultValue={selectedStatus} onChange={setSelectedStatus} options={status} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите поля, которые необходимо вернуть' defaultValue={selectedFields} onChange={setSelectedFields} options={fields} isMulti closeMenuOnSelect={false} />
@@ -266,7 +282,7 @@ const UserSearchPage = () =>{
         </TabPanel>
         {/* школа */}
         <TabPanel value="2">
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -274,14 +290,14 @@ const UserSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
-            <TextField className='text' id="filled-basic" onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
+            <TextField className='text' id="filled-basic" defaultValue={group_id} onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
             <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <div className='bdiv'>
-                <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст от" defaultValue={age_from} onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст до" defaultValue={age_to} onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
@@ -290,7 +306,7 @@ const UserSearchPage = () =>{
             <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={(e)=>get_city()} options={regions} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} onMenuClose={(e)=>get_school()} options={cities} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите школу' defaultValue={selectedSchool} onChange={setSelectedSchool} options={school} closeMenuOnSelect={false} />
-            <TextField className='text' id="filled-basic" onChange={e=>setYear(e.target.value)} label="Введите год окончания" /> 
+            <TextField className='text' id="filled-basic" defaultValue={year} onChange={e=>setYear(e.target.value)} label="Введите год окончания" /> 
             <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить
@@ -299,7 +315,7 @@ const UserSearchPage = () =>{
         </TabPanel>
         {/* универ */}
         <TabPanel value="3">
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -307,14 +323,14 @@ const UserSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
-            <TextField className='text' id="filled-basic" onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" />  
+            <TextField className='text' id="filled-basic" defaultValue={group_id} onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
             <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <div className='bdiv'>
-                <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст от" defaultValue={age_from} onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст до" defaultValue={age_to} onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
@@ -324,7 +340,7 @@ const UserSearchPage = () =>{
             <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} onMenuClose={(e)=>get_universities()} options={cities} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите университет' defaultValue={selectedUnivercity} onChange={setSelectedUnivercity} onMenuClose={(e)=>get_facults()} options={universities} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите институт' defaultValue={selectedFacults} onChange={setSelectedFacults} options={facults} closeMenuOnSelect={false} />
-            <TextField className='text' id="filled-basic" onChange={e=>setYear(e.target.value)} label="Введите год окончания" /> 
+            <TextField className='text' id="filled-basic" defaultValue={year} onChange={e=>setYear(e.target.value)} label="Введите год окончания" /> 
             <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить
@@ -333,7 +349,7 @@ const UserSearchPage = () =>{
         </TabPanel>
         {/* работа */}
         <TabPanel value="4">
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -341,14 +357,14 @@ const UserSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" /> 
-            <TextField className='text' id="filled-basic" onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос, например Иван Петров" /> 
+            <TextField className='text' id="filled-basic" defaultValue={group_id} onChange={e=>set_group_id(e.target.value)} label="Введите короткое имя группы" />  
             <Select className='select' placeholder='Выберите способ сортировки' defaultValue={selectedSort} onChange={setSelectedSort} options={sort} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} />
             <div className='bdiv'>
-                <TextField id="filled-number"  label="Возраст от" onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
-                <TextField id="filled-number"  label="Возраст до" onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст от" defaultValue={age_from} onChange={(e) => set_age_from(e.target.value)} type="number" step={1} min={0}/>
+                <TextField id="filled-number" className='lo' label="Возраст до" defaultValue={age_to} onChange={(e) => set_age_to(e.target.value)} type="number" step={1} min={0}/>
             </div>
             <Select className='select' placeholder='Выберите пол' defaultValue={selectedSex} onChange={setSelectedSex} options={sex} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите где искать' defaultValue={selected_from_list} onChange={setSelected_from_list} options={from_list} closeMenuOnSelect={false} /> 
@@ -356,8 +372,8 @@ const UserSearchPage = () =>{
             <Select className='select' placeholder='Выберите страну' defaultValue={selectedCountry} onChange={setSelectedCountry} onMenuClose={(e)=>get_region()} options={countries} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={(e)=>get_city()} options={regions} closeMenuOnSelect={false} />
             <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} options={cities} closeMenuOnSelect={false} />
-            <TextField className='text' id="filled-basic" onChange={e=>set_company(e.target.value)} label="Введите название компании" />
-            <TextField className='text' id="filled-basic" onChange={e=>set_position(e.target.value)} label="Введите должность" /> 
+            <TextField className='text' id="filled-basic" defaultValue={company} onChange={e=>set_company(e.target.value)} label="Введите название компании" />
+            <TextField className='text' id="filled-basic" defaultValue={position} onChange={e=>set_position(e.target.value)} label="Введите должность" /> 
             
             <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 

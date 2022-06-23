@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import {useFavicon} from 'react-use';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
@@ -18,6 +19,7 @@ import Logotip from "../logo.png";
 
 const Header = () =>{
 
+    useFavicon(Logotip)
     const toNavigate = useNavigate()
     const out = () =>{
         localStorage.clear()
@@ -44,7 +46,7 @@ const Header = () =>{
             <Menu menuButton={<Button className='menu_but button css-but' variant="outlined" startIcon={<GroupsOutlinedIcon />}>Группы </Button>}>
                 <MenuItem onClick={()=>toNavigate('/groups/get_subscriptions/'+null)}>Подписчики</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_info/'+null)}>Информация</MenuItem>
-                <MenuItem onClick={()=>toNavigate('/groups/search/'+null)}>Поиск сообществ</MenuItem>
+                <MenuItem onClick={()=>toNavigate('/groups/search_group/'+null)}>Поиск сообществ</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/search_event/'+null)}>Поиск событий</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_catalogs/'+null)}>Каталоги</MenuItem>
                 <MenuItem onClick={()=>toNavigate('/groups/get_categories/'+null)}>Категории</MenuItem>

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import queryString from "query-string";
 import Button from '@mui/material/Button';
 import jwt_decode from "jwt-decode";
@@ -34,11 +34,14 @@ const UserSubscriptionPage = () =>{
 
     const [selectedOption, setSelectedOption] = useState(null)
 
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
     let data = [{value: 'about,activities,bdate,blacklisted,blacklisted_by_mebooks,can_post,can_see_all_posts',label:'Основные'},
     {value: 'can_see_audio,can_send_friend_request,can_write_private_message,career,city,common_count',label:'Дополнительные'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
 
@@ -47,7 +50,7 @@ const UserSubscriptionPage = () =>{
     const Send = () =>{
         if((NameZapros!==null)&&(NameZapros!=='')){
             setLoading(true)
-        let field = `members_count,`
+        let field = `members_count,about,activities,bdate,blacklisted,blacklisted_by_mebooks,can_post,can_see_all_posts,can_see_audio,can_send_friend_request,can_write_private_message,career,city,common_count`
         console.log(field)
         if(selectedOption!=null)
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
@@ -78,7 +81,7 @@ return (
     <div className='content con'>
         <h3 className='h'>Подписки пользователя</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -86,7 +89,7 @@ return (
                    Вы не ввели название запроса
             </Alert>
             </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
             <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить

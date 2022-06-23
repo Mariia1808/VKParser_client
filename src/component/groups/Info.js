@@ -14,14 +14,18 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const GroupsInfoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     
     const [loading, setLoading]=useState(false)
@@ -39,15 +43,10 @@ const GroupsInfoPage = () =>{
         console.log(info)
     }
 
-    const Delete = () =>{
-        setInfo(null)
-        setName('')
-        setNameZapros('')
-    }
-
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}])
+        const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id), parameters, 9)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -57,7 +56,7 @@ const GroupsInfoPage = () =>{
     <div className='content con'>
         <h3 className='h'>Расширенная информация о сообществе(-ах)</h3>
         <div >
-            <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+            <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
             <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -65,7 +64,7 @@ const GroupsInfoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-            <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
+            <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите идентификатор или короткое имя" />
             <div className='div1'>
                 <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                     Продолжить

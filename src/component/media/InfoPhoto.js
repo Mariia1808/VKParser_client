@@ -13,13 +13,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const MediaInfoPhotoPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
-    const [NameZapros, setNameZapros] = useState(null)
-    const [name, setName] = useState(null)
+
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
+    const [name, setName] = useState(def===null?'':def[1].param)
     const [photo, setPhoto] = useState(null)
 
     const [loading, setLoading]=useState(false)
@@ -36,7 +42,8 @@ const MediaInfoPhotoPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(photo.response), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param': name}])
+        const data = await SaveHistory(JSON.stringify(photo.response), NameZapros, parseInt(decodedData.id), parameters, 14)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -47,7 +54,7 @@ const MediaInfoPhotoPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Информация о фото</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -55,7 +62,7 @@ const MediaInfoPhotoPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите через запятую идентификаторы фотографий" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите через запятую идентификаторы фотографий" />
         <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить

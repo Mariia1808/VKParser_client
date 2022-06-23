@@ -91,6 +91,8 @@
 }
 .text{
     width: 100%;
+    margin-top: 10px!important;
+    z-index: 0!important;
 }
 .div1{
     display: flex;
@@ -127,10 +129,6 @@
     margin-bottom: 0px;
     justify-content: center;
     display: flex;
-}
-.css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
-    margin-top: 10px!important;
-    z-index: 0!important;
 }
 .css-1s2u09g-control{
     height: 56px;
@@ -184,4 +182,7 @@
 }
 .f{
     margin-bottom: 0;
+}
+.lo{
+    margin-top: 10px!important;
 }

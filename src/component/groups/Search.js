@@ -15,14 +15,18 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const GroupsSearchPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
-    const [selectedOption, setSelectedOption] = useState(null)
-    const [selectedOptionT, setSelectedOptionT] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].select)
+    const [selectedOptionT, setSelectedOptionT] = useState(def===null?'':def[3].selectT)
 
     let data = [{value: 'group',label:'Группы'},
     {value: 'page',label:'Сообщества'}]
@@ -30,8 +34,8 @@ const GroupsSearchPage = () =>{
 
     let type = [{value:'0', label:'сортировать по умолчанию'},{value: '6' , label:'сортировать по количеству пользователей'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [error, setError] = useState(null)
     
@@ -53,7 +57,8 @@ const GroupsSearchPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'select':selectedOption}, {'selectT':selectedOptionT}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 10)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -63,7 +68,7 @@ const GroupsSearchPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Поиск сообществ</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -71,7 +76,7 @@ const GroupsSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос" />
         <Select className='select' placeholder='Выберите тип сообщетсва' defaultValue={selectedOption} onChange={setSelectedOption} options={data} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите правило сортировки' defaultValue={selectedOptionT} onChange={setSelectedOptionT} options={type} closeMenuOnSelect={false} />
         <div className='div1'>

@@ -16,17 +16,22 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const EventSearchPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
-
-    const [selectedOption, setSelectedOption] = useState(null)
     const [region, setRegion] = useState([])
 
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [selectedOption, setSelectedOption] = useState(def===null?'':def[4].fields)
+
     useEffect(() =>{
-        getRegions(decodedData.token, 1).then(data => setRegion(data.response.items))
+        getRegions(decodedData.token, 1).then(data => setRegion(data.response.items)).finally(()=>def===null?null:get_city())
+        
     },[])
 
     let regions = region.map((item) => {
@@ -38,8 +43,8 @@ const EventSearchPage = () =>{
 
     let type = [{value:'0', label:'сортировать по умолчанию'},{value: '6' , label:'сортировать по количеству пользователей'}]
 
-    const [name, setName] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [info, setInfo] = useState(null)
     const [t, setT] = useState(null)
     
@@ -60,7 +65,8 @@ const EventSearchPage = () =>{
 
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'region':selectedRegion}, {'city':selectedCity}, {'fields':selectedOption}])
+        const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 11)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -80,14 +86,14 @@ const EventSearchPage = () =>{
         console.log(cities)
     }
 
-    const [selectedRegion, setSelectedRegion] = useState(null)
-    const [selectedCity, setSelectedCity] = useState(null)
+    const [selectedRegion, setSelectedRegion] = useState(def===null?'':def[2].region)
+    const [selectedCity, setSelectedCity] = useState(def===null?'':def[3].city)
 
   return (
 <>
     <div className='content con'>
         <h3 className='h'>Поиск событий</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -95,7 +101,7 @@ const EventSearchPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите запрос" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите запрос" />
         <Select className='select' placeholder='Выберите регион' defaultValue={selectedRegion} onChange={setSelectedRegion} onMenuClose={()=>get_city()} options={regions} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите город' defaultValue={selectedCity} onChange={setSelectedCity} options={cities} closeMenuOnSelect={false} />
         <Select className='select' placeholder='Выберите правило сортировки' defaultValue={selectedOption} onChange={setSelectedOption} options={type} closeMenuOnSelect={false} />

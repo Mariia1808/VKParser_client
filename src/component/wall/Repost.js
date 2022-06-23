@@ -14,17 +14,21 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const WallRepostPage = () =>{
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
 
-    const [name, setName] = useState(null)
-    const [post_id, setPost] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+
+    const [name, setName] = useState(def===null?'':def[1].param)
+    const [post_id, setPost] = useState(def===null?'':def[2].id)
     const [info, setInfo] = useState(null)
     const [copyes, setCopy] = useState(null)
-    const [NameZapros, setNameZapros] = useState(null)
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const [main, setMain] = useState(null)
     const [loading, setLoading]=useState(false)
     const [open_error, setOpen_error] = useState(false);
@@ -69,14 +73,16 @@ const WallRepostPage = () =>{
     }
         const [open, setOpen] = useState(false)
         const Save = async ()=>{
-            const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id))
+            const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'id':post_id}])
+            const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id), parameters, 21)
             if(data.response==='no_error'){
                 setOpen(true)
             }
         }
         const [open1, setOpen1] = useState(false)
         const Save1 = async ()=>{
-            const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id))
+            const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'id':post_id}])
+            const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id), parameters, 21)
             if(data.response==='no_error'){
                 setOpen1(true)
             }
@@ -85,7 +91,7 @@ const WallRepostPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h zag'>Информация о репостах записи</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
@@ -93,8 +99,8 @@ const WallRepostPage = () =>{
                    Вы не ввели название запроса
             </Alert>
         </Collapse>
-        <TextField className='text' id="filled-basic" onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
-        <TextField className='text' id="filled-basic" onChange={e=>setPost(e.target.value)} label="Введите идентификатор записи" />
+        <TextField className='text' id="filled-basic" defaultValue={name} onChange={e=>setName(e.target.value)} label="Введите короткое имя пользователя или сообщества" />
+        <TextField className='text' id="filled-basic" defaultValue={post_id} onChange={e=>setPost(e.target.value)} label="Введите идентификатор записи" />
         <div className='div1'>
             <LoadingButton onClick={()=>Send()} className='menu_but button' endIcon={<SendIcon/>} loading={loading} loadingPosition="end" variant="outlined"> 
                 Продолжить

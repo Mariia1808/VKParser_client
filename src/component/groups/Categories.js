@@ -15,13 +15,17 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Collapse from '@mui/material/Collapse';
+import { useParams } from 'react-router-dom';
 
 
 const GroupsCategoriesPage = () =>{
     const [catalogs, setCatalogs] = useState([])
     const [selectedOption, setSelectedOption] = useState(null)
 
-    const [NameZapros, setNameZapros] = useState(null)
+    const {params} = useParams()
+    const def = (params==='null'? null:JSON.parse(JSON.parse(params)))
+    
+    const [NameZapros, setNameZapros] = useState(def===null?'':def[0].name)
     const storedToken = localStorage.getItem("token");
     let decodedData = jwt_decode(storedToken);
     
@@ -38,7 +42,7 @@ const GroupsCategoriesPage = () =>{
         }
     })
       
-    const [categories, setCategories] = useState(null)
+    const [categories, setCategories] = useState(def===null?'':def[1].param)
     const [loading, setLoading]=useState(false)
     const [open_error, setOpen_error] = useState(false);
     const Send = () =>{
@@ -53,7 +57,8 @@ const GroupsCategoriesPage = () =>{
     }
     const [open, setOpen] = useState(false);
     const Save = async ()=>{
-        const data = await SaveHistory(JSON.stringify(categories.response.items), NameZapros, parseInt(decodedData.id))
+        const parameters = JSON.stringify([{'name': NameZapros}, {'param':selectedOption}])
+        const data = await SaveHistory(JSON.stringify(categories.response.items), NameZapros, parseInt(decodedData.id), parameters, 13)
         if(data.response==='no_error'){
             setOpen(true)
         }
@@ -62,7 +67,7 @@ const GroupsCategoriesPage = () =>{
 <>
     <div className='content con'>
         <h3 className='h'>Поиск групп по категории</h3>
-        <TextField className='text' id="filled-basic" onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
+        <TextField className='text' id="filled-basic" defaultValue={NameZapros} onChange={e=>setNameZapros(e.target.value)} label="Введите название запроса*" />
         <Collapse in={open_error}>
             <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen_error(false);}}>
                 <CloseIcon fontSize="inherit" />
