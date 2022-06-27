@@ -77,19 +77,25 @@ const WallInfoPage = () =>{
     }
 
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const Save = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
         const data = await SaveHistory(JSON.stringify(main), NameZapros, parseInt(decodedData.id), parameters, 19)
         if(data.response==='no_error'){
             setOpen(true)
+        }else{
+            setOpenError(true)
         }
     }
     const [open1, setOpen1] = useState(false);
+    const [openError1, setOpenError1] = useState(false);
     const Save1 = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
         const data = await SaveHistory(JSON.stringify(copyes), NameZapros, parseInt(decodedData.id), parameters, 19)
         if(data.response==='no_error'){
             setOpen1(true)
+        }else{
+            setOpenError1(true)
         }
     }
 
@@ -141,6 +147,13 @@ const WallInfoPage = () =>{
                             Запрос успешно сохранен
                     </Alert>
                 </Collapse>
+                <Collapse in={openError}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
+                        </Alert>
+                    </Collapse>
             <div>
             <table className='table'>
                 <thead>
@@ -203,6 +216,13 @@ const WallInfoPage = () =>{
                             Запрос успешно сохранен
                     </Alert>
                 </Collapse>
+                <Collapse in={openError1}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError1(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
+                        </Alert>
+                    </Collapse>
                 <table className='table'>
                 <thead>
                     <th>№</th>

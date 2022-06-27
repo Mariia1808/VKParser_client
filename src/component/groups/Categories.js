@@ -56,11 +56,14 @@ const GroupsCategoriesPage = () =>{
         }
     }
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const Save = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param':selectedOption}])
         const data = await SaveHistory(JSON.stringify(categories.response.items), NameZapros, parseInt(decodedData.id), parameters, 13)
         if(data.response==='no_error'){
             setOpen(true)
+        }else{
+            setOpenError(true)
         }
     }
   return (
@@ -109,6 +112,13 @@ const GroupsCategoriesPage = () =>{
                         Запрос успешно сохранен
                 </Alert>
             </Collapse>
+            <Collapse in={openError}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
+                        </Alert>
+                    </Collapse>
             <table className='table'>
             <thead>
                 <th>№</th>

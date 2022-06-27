@@ -60,7 +60,7 @@ const HistoryPage = () =>{
             }
             })()}
        {(() => {
-        switch (history!=null) {
+        switch ((history!==null)&&(history.length!==0)) {
             case true:
                 return <>{history.count===0?
                 <>Вы еще ничего не сохранили</>

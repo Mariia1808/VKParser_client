@@ -51,11 +51,14 @@ const MediaInfoAlbomVideoPage = () =>{
     }
 
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const Save = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param': ID}])
         const data = await SaveHistory(JSON.stringify(info.response.items), NameZapros, parseInt(decodedData.id), parameters, 18)
         if(data.response==='no_error'){
             setOpen(true)
+        }else{
+            setOpenError(true)
         }
     }
 
@@ -108,6 +111,13 @@ const MediaInfoAlbomVideoPage = () =>{
                         Запрос успешно сохранен
                 </Alert>
             </Collapse>
+            <Collapse in={openError}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
+                        </Alert>
+                    </Collapse>
             <table className='table'>
             <thead>
                 <th>№</th>

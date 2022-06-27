@@ -1,6 +1,7 @@
 export const MAIN_ROUTE = '/main'
 export const AUTH_ROUTE = '/auth'
 export const HISTORY_ROUTE = '/history'
+export const METHOD_ROUTE = '/methods'
 
 //пользователи
 export const USER_GET_INFO = '/user/get_info'

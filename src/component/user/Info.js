@@ -31,7 +31,7 @@ const UserInfoPage = () =>{
 
     const [selectedOption, setSelectedOption] = useState(def===null?'':def[2].fields)
 
-    let fields = [{value: 'education,universities,schools,career,', label:'Образование'},
+    let fields = [{value: 'education,universities,schools,career', label:'Образование'},
     {value: 'can_be_invited_group,can_see_all_posts,can_see_audio,can_send_friend_request,blacklisted,blacklisted_by_me', label:'Приватность'},
     {value: 'nickname,relation,relatives,timezone,maiden_name,military,home_town,verified,followers_count,country,site,personal,about', label:'Общее'},
     {value: 'books,movies,music,games,interests,tv,activities', label:'Интересы'},
@@ -48,8 +48,8 @@ const UserInfoPage = () =>{
         if((NameZapros!==null)&&(NameZapros!=='')){
             setLoading(true)
         let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,sex,`
-        console.log(field)
-        if(selectedOption!=null)
+        console.log(selectedOption)
+        if(selectedOption!=='')
         {selectedOption.map((data,index)=> field=field+String(data.value)+',')}
         let Name = (name===''? null:name)
             const data = await getUser_long(decodedData.token, Name, field).finally(()=>setLoading(false))
@@ -67,6 +67,7 @@ const UserInfoPage = () =>{
         setSelectedOption(null)
     }
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const Save = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'fields':selectedOption}])
         console.log(parameters)
@@ -74,6 +75,8 @@ const UserInfoPage = () =>{
         const data = await SaveHistory(JSON.stringify(info.response), NameZapros, parseInt(decodedData.id), parameters, 3)
         if(data.response==='no_error'){
             setOpen(true)
+        }else{
+            setOpenError(true)
         }
     }
 
@@ -120,11 +123,18 @@ const UserInfoPage = () =>{
                         
                     </div>
                 </div>
-                <Collapse in={open}>
+                    <Collapse in={open}>
                         <Alert action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpen(false);}}>
                             <CloseIcon fontSize="inherit" />
                             </IconButton>}sx={{ mb: 2 }}>
                                 Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
+                    <Collapse in={openError}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
                         </Alert>
                     </Collapse>
                 <table className='table'>

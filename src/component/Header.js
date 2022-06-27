@@ -4,7 +4,7 @@ import {useFavicon} from 'react-use';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
-
+import jwt_decode from "jwt-decode";
 
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
@@ -81,6 +81,7 @@ const Header = () =>{
         <div>
             <Menu menuButton={<IconButton className='menu_but  button' color="primary"><FaceOutlinedIcon  variant="outlined"/></IconButton>}>
                 <MenuItem onClick={()=>toNavigate('/history')}>История</MenuItem>
+                {localStorage.length!==0?  jwt_decode(localStorage.getItem("token")).user_id === '50064646'? <MenuItem onClick={()=>toNavigate('/methods')}>Методы</MenuItem>:null:null}
                 <MenuItem onClick={()=> out()}>Выход</MenuItem>
             </Menu>
         </div>

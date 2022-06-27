@@ -1,11 +1,11 @@
 const axios = require('axios')
 
 const $host = axios.create({
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'https://shrouded-shore-51202.herokuapp.com/'
 })
 
 const $authHost = axios.create({
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'https://shrouded-shore-51202.herokuapp.com/'
 })
 
 const authInterceptor = config => {
@@ -13,7 +13,7 @@ const authInterceptor = config => {
     return config
 }
 
-$host.interceptors.request.use(authInterceptor)
+$authHost.interceptors.request.use(authInterceptor)
 
 export {
     $host,

@@ -44,7 +44,7 @@ const GroupsSubscriptionPage = () =>{
     
     const [loading, setLoading]=useState(false)
     const [open_error, setOpen_error] = useState(false);
-    const Send = () =>{
+    const Send = async () =>{
         if((NameZapros!==null)&&(NameZapros!=='')){
             setLoading(true)
         let field = `bdate,can_post,city,screen_name,friend_status,can_write_private_message,sex,`
@@ -54,7 +54,7 @@ const GroupsSubscriptionPage = () =>{
         let Name = (name===''? null:name)
       
         let SelectedOptionT = (selectedOptionT===null? null:selectedOptionT.value)
-        getMembers(decodedData.token, Name, field, SelectedOptionT).then(data=> setInfo(data)).finally(()=>setLoading(false))
+        await getMembers(decodedData.token, Name, field, SelectedOptionT).then(data=> setInfo(data)).finally(()=>setLoading(false))
         }else{
             setOpen_error(true)
         }
@@ -62,11 +62,14 @@ const GroupsSubscriptionPage = () =>{
     }
 
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const Save = async ()=>{
         const parameters = JSON.stringify([{'name': NameZapros}, {'param':name}, {'select':selectedOption}, {'selectT':selectedOptionT}])
         const data = await SaveHistory(JSON.stringify(info), NameZapros, parseInt(decodedData.id), parameters, 8)
         if(data.response==='no_error'){
             setOpen(true)
+        }else{
+            setOpenError(true)
         }
     }
 
@@ -116,6 +119,13 @@ const GroupsSubscriptionPage = () =>{
                             <CloseIcon fontSize="inherit" />
                             </IconButton>}sx={{ mb: 2 }}>
                                 Запрос успешно сохранен
+                        </Alert>
+                    </Collapse>
+                    <Collapse in={openError}>
+                        <Alert severity="error" action={<IconButton aria-label="close" color="inherit" size="small" onClick={() => {setOpenError(false);}}>
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>}sx={{ mb: 2 }}>
+                            Пожалуйста повторите попытку позже.
                         </Alert>
                     </Collapse>
                 <table className='table'>
